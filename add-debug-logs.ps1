@@ -31,12 +31,12 @@ function Get-ExportedFunctions($headerFile) {
 }
 
 # Function to ensure syslog_defs.h is included in the file
-function Ensure-SyslogDefsIncluded($sourceFile) {
+function Ensure-UtilBaseDefsIncluded($sourceFile) {
     $content = Get-Content $sourceFile -Raw
     $modified = $false
     
     # Check if syslog_defs.h is already included
-    if (-not $content.Contains("#include <syslog_defs.h>") -and -not $content.Contains('#include "syslog_defs.h"')) {
+    if (-not ($content -match '#include\s+<util/base\.h>|#include\s+"[^"]*/util/base\.h"')) {
         # Find the last include statement
         $lastIncludeIndex = $content.LastIndexOf("#include")
         if ($lastIncludeIndex -ge 0) {
@@ -44,9 +44,9 @@ function Ensure-SyslogDefsIncluded($sourceFile) {
             $endOfLineIndex = $content.IndexOf("`n", $lastIncludeIndex)
             if ($endOfLineIndex -ge 0) {
                 # Insert the new include after the last one
-                $content = $content.Insert($endOfLineIndex + 1, "#include <syslog_defs.h>`n")
+                $content = $content.Insert($endOfLineIndex + 1, "#include <util/base.h>`n")
                 $modified = $true
-                Write-Host "Added syslog_defs.h include to $sourceFile"
+                Write-Host "Added util/base.h include to $sourceFile"
             }
         }
         else {
@@ -68,21 +68,21 @@ function Ensure-SyslogDefsIncluded($sourceFile) {
                 }
             }
             
-            $content = $content.Insert($headerEndIndex, "#include <syslog_defs.h>`n`n")
+            $content = $content.Insert($headerEndIndex, "#include <util/base.h>`n`n")
             $modified = $true
-            Write-Host "Added syslog_defs.h include to the top of $sourceFile"
+            Write-Host "Added util/base.h include to the top of $sourceFile"
         }
     }
     
     return @{
-        Content = $content
+        Content  = $content
         Modified = $modified
     }
 }
 
 # Function to add debug logs to source files
 function Add-DebugLogs($sourceFile, $exportedFunctions) {
-    $result = Ensure-SyslogDefsIncluded $sourceFile
+    $result = Ensure-UtilBaseDefsIncluded $sourceFile
     $content = $result.Content
     $modified = $result.Modified
     
@@ -130,13 +130,16 @@ function Process-FilePair($headerFile, $sourceFile) {
     if ($dryRun) {
         if ($modified) {
             Write-Host "Would modify $sourceFile (dry run)" -ForegroundColor Yellow
-        } else {
+        }
+        else {
             Write-Host "No changes needed for $sourceFile" -ForegroundColor Green
         }
-    } else {
+    }
+    else {
         if ($modified) {
             Write-Host "Modified $sourceFile" -ForegroundColor Yellow
-        } else {
+        }
+        else {
             Write-Host "No changes needed for $sourceFile" -ForegroundColor Green
         }
     }
@@ -188,7 +191,8 @@ Write-Host "Debug Log Insertion Script" -ForegroundColor Magenta
 Write-Host "Base Directory: $baseDir" -ForegroundColor Magenta
 if ($dryRun) {
     Write-Host "Mode: Dry Run (no changes will be made)" -ForegroundColor Magenta
-} else {
+}
+else {
     Write-Host "Mode: Live Run (files will be modified)" -ForegroundColor Magenta
 }
 
