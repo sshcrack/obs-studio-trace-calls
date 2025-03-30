@@ -20,9 +20,11 @@
 #include "matrix4.h"
 #include "plane.h"
 #include "quat.h"
+#include <util/base.h>
 
 void matrix3_from_quat(struct matrix3 *dst, const struct quat *q)
 {
+	blog(LOG_DEBUG, "Function matrix3_from_quat called");
 	float norm = quat_dot(q, q);
 	float s = (norm > 0.0f) ? (2.0f / norm) : 0.0f;
 
@@ -44,6 +46,7 @@ void matrix3_from_quat(struct matrix3 *dst, const struct quat *q)
 
 void matrix3_from_axisang(struct matrix3 *dst, const struct axisang *aa)
 {
+	blog(LOG_DEBUG, "Function matrix3_from_axisang called");
 	struct quat q;
 	quat_from_axisang(&q, aa);
 	matrix3_from_quat(dst, &q);
@@ -51,6 +54,7 @@ void matrix3_from_axisang(struct matrix3 *dst, const struct axisang *aa)
 
 void matrix3_from_matrix4(struct matrix3 *dst, const struct matrix4 *m)
 {
+	blog(LOG_DEBUG, "Function matrix3_from_matrix4 called");
 	dst->x.m = m->x.m;
 	dst->y.m = m->y.m;
 	dst->z.m = m->z.m;
@@ -63,6 +67,7 @@ void matrix3_from_matrix4(struct matrix3 *dst, const struct matrix4 *m)
 
 void matrix3_mul(struct matrix3 *dst, const struct matrix3 *m1, const struct matrix3 *m2)
 {
+	blog(LOG_DEBUG, "Function matrix3_mul called");
 	if (dst == m2) {
 		struct matrix3 temp;
 		vec3_rotate(&temp.x, &m1->x, m2);
@@ -80,6 +85,7 @@ void matrix3_mul(struct matrix3 *dst, const struct matrix3 *m1, const struct mat
 
 void matrix3_rotate(struct matrix3 *dst, const struct matrix3 *m, const struct quat *q)
 {
+	blog(LOG_DEBUG, "Function matrix3_rotate called");
 	struct matrix3 temp;
 	matrix3_from_quat(&temp, q);
 	matrix3_mul(dst, m, &temp);
@@ -87,6 +93,7 @@ void matrix3_rotate(struct matrix3 *dst, const struct matrix3 *m, const struct q
 
 void matrix3_rotate_aa(struct matrix3 *dst, const struct matrix3 *m, const struct axisang *aa)
 {
+	blog(LOG_DEBUG, "Function matrix3_rotate_aa called");
 	struct matrix3 temp;
 	matrix3_from_axisang(&temp, aa);
 	matrix3_mul(dst, m, &temp);
@@ -94,6 +101,7 @@ void matrix3_rotate_aa(struct matrix3 *dst, const struct matrix3 *m, const struc
 
 void matrix3_scale(struct matrix3 *dst, const struct matrix3 *m, const struct vec3 *v)
 {
+	blog(LOG_DEBUG, "Function matrix3_scale called");
 	vec3_mul(&dst->x, &m->x, v);
 	vec3_mul(&dst->y, &m->y, v);
 	vec3_mul(&dst->z, &m->z, v);
@@ -102,6 +110,7 @@ void matrix3_scale(struct matrix3 *dst, const struct matrix3 *m, const struct ve
 
 void matrix3_transpose(struct matrix3 *dst, const struct matrix3 *m)
 {
+	blog(LOG_DEBUG, "Function matrix3_transpose called");
 	__m128 tmp1, tmp2;
 	vec3_rotate(&dst->t, &m->t, m);
 	vec3_neg(&dst->t, &dst->t);
@@ -115,6 +124,7 @@ void matrix3_transpose(struct matrix3 *dst, const struct matrix3 *m)
 
 void matrix3_inv(struct matrix3 *dst, const struct matrix3 *m)
 {
+	blog(LOG_DEBUG, "Function matrix3_inv called");
 	struct matrix4 m4;
 	matrix4_from_matrix3(&m4, m);
 	matrix4_inv((struct matrix4 *)dst, &m4);
@@ -123,6 +133,7 @@ void matrix3_inv(struct matrix3 *dst, const struct matrix3 *m)
 
 void matrix3_mirror(struct matrix3 *dst, const struct matrix3 *m, const struct plane *p)
 {
+	blog(LOG_DEBUG, "Function matrix3_mirror called");
 	vec3_mirrorv(&dst->x, &m->x, &p->dir);
 	vec3_mirrorv(&dst->y, &m->y, &p->dir);
 	vec3_mirrorv(&dst->z, &m->z, &p->dir);
@@ -131,6 +142,7 @@ void matrix3_mirror(struct matrix3 *dst, const struct matrix3 *m, const struct p
 
 void matrix3_mirrorv(struct matrix3 *dst, const struct matrix3 *m, const struct vec3 *v)
 {
+	blog(LOG_DEBUG, "Function matrix3_mirrorv called");
 	vec3_mirrorv(&dst->x, &m->x, v);
 	vec3_mirrorv(&dst->y, &m->y, v);
 	vec3_mirrorv(&dst->z, &m->z, v);

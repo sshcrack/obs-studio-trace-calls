@@ -215,12 +215,14 @@ static void gs_image_file_init_internal(gs_image_file_t *image, const char *file
 
 void gs_image_file_init(gs_image_file_t *image, const char *file)
 {
+	blog(LOG_DEBUG, "Function %s called", "gs_image_file_init");
 	enum gs_color_space unused;
 	gs_image_file_init_internal(image, file, NULL, &unused, GS_IMAGE_ALPHA_STRAIGHT);
 }
 
 void gs_image_file_free(gs_image_file_t *image)
 {
+	blog(LOG_DEBUG, "Function %s called", "gs_image_file_free");
 	if (!image)
 		return;
 
@@ -241,12 +243,14 @@ void gs_image_file_free(gs_image_file_t *image)
 
 void gs_image_file2_init(gs_image_file2_t *if2, const char *file)
 {
+	blog(LOG_DEBUG, "Function %s called", "gs_image_file2_init");
 	enum gs_color_space unused;
 	gs_image_file_init_internal(&if2->image, file, &if2->mem_usage, &unused, GS_IMAGE_ALPHA_STRAIGHT);
 }
 
 void gs_image_file3_init(gs_image_file3_t *if3, const char *file, enum gs_image_alpha_mode alpha_mode)
 {
+	blog(LOG_DEBUG, "Function %s called", "gs_image_file3_init");
 	enum gs_color_space unused;
 	gs_image_file_init_internal(&if3->image2.image, file, &if3->image2.mem_usage, &unused, alpha_mode);
 	if3->alpha_mode = alpha_mode;
@@ -254,6 +258,7 @@ void gs_image_file3_init(gs_image_file3_t *if3, const char *file, enum gs_image_
 
 void gs_image_file4_init(gs_image_file4_t *if4, const char *file, enum gs_image_alpha_mode alpha_mode)
 {
+	blog(LOG_DEBUG, "Function %s called", "gs_image_file4_init");
 	gs_image_file_init_internal(&if4->image3.image2.image, file, &if4->image3.image2.mem_usage, &if4->space,
 				    alpha_mode);
 	if4->image3.alpha_mode = alpha_mode;
@@ -261,6 +266,7 @@ void gs_image_file4_init(gs_image_file4_t *if4, const char *file, enum gs_image_
 
 void gs_image_file_init_texture(gs_image_file_t *image)
 {
+	blog(LOG_DEBUG, "Function %s called", "gs_image_file_init_texture");
 	if (!image->loaded)
 		return;
 
@@ -369,21 +375,25 @@ static bool gs_image_file_tick_internal(gs_image_file_t *image, uint64_t elapsed
 
 bool gs_image_file_tick(gs_image_file_t *image, uint64_t elapsed_time_ns)
 {
+	blog(LOG_DEBUG, "Function %s called", "gs_image_file_tick");
 	return gs_image_file_tick_internal(image, elapsed_time_ns, false);
 }
 
 bool gs_image_file2_tick(gs_image_file2_t *if2, uint64_t elapsed_time_ns)
 {
+	blog(LOG_DEBUG, "Function %s called", "gs_image_file2_tick");
 	return gs_image_file_tick_internal(&if2->image, elapsed_time_ns, false);
 }
 
 bool gs_image_file3_tick(gs_image_file3_t *if3, uint64_t elapsed_time_ns)
 {
+	blog(LOG_DEBUG, "Function %s called", "gs_image_file3_tick");
 	return gs_image_file_tick_internal(&if3->image2.image, elapsed_time_ns, if3->alpha_mode);
 }
 
 bool gs_image_file4_tick(gs_image_file4_t *if4, uint64_t elapsed_time_ns)
 {
+	blog(LOG_DEBUG, "Function %s called", "gs_image_file4_tick");
 	return gs_image_file_tick_internal(&if4->image3.image2.image, elapsed_time_ns, if4->image3.alpha_mode);
 }
 
@@ -401,20 +411,24 @@ static void gs_image_file_update_texture_internal(gs_image_file_t *image, enum g
 
 void gs_image_file_update_texture(gs_image_file_t *image)
 {
+	blog(LOG_DEBUG, "Function %s called", "gs_image_file_update_texture");
 	gs_image_file_update_texture_internal(image, false);
 }
 
 void gs_image_file2_update_texture(gs_image_file2_t *if2)
 {
+	blog(LOG_DEBUG, "Function %s called", "gs_image_file2_update_texture");
 	gs_image_file_update_texture_internal(&if2->image, false);
 }
 
 void gs_image_file3_update_texture(gs_image_file3_t *if3)
 {
+	blog(LOG_DEBUG, "Function %s called", "gs_image_file3_update_texture");
 	gs_image_file_update_texture_internal(&if3->image2.image, if3->alpha_mode);
 }
 
 void gs_image_file4_update_texture(gs_image_file4_t *if4)
 {
+	blog(LOG_DEBUG, "Function %s called", "gs_image_file4_update_texture");
 	gs_image_file_update_texture_internal(&if4->image3.image2.image, if4->image3.alpha_mode);
 }

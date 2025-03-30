@@ -21,6 +21,7 @@
 #include "obs-defs.h"
 #include "obs-internal.h"
 #include "obs-module.h"
+#include <util/base.h>
 
 extern const char *get_module_extension(void);
 

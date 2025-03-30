@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "obs-internal.h"
 
 #include "obs-audio-controls.h"
+#include <util/base.h>
 
 /* These are pointless warnings generated not by our code, but by a standard
  * library macro, INFINITY */
@@ -564,6 +565,7 @@ fail:
 
 void obs_fader_destroy(obs_fader_t *fader)
 {
+	blog(LOG_DEBUG, "Function obs_fader_destroy called");
 	if (!fader)
 		return;
 
@@ -577,6 +579,7 @@ void obs_fader_destroy(obs_fader_t *fader)
 
 bool obs_fader_set_db(obs_fader_t *fader, const float db)
 {
+	blog(LOG_DEBUG, "Function obs_fader_set_db called");
 	if (!fader)
 		return false;
 
@@ -608,6 +611,7 @@ bool obs_fader_set_db(obs_fader_t *fader, const float db)
 
 float obs_fader_get_db(obs_fader_t *fader)
 {
+	blog(LOG_DEBUG, "Function obs_fader_get_db called");
 	if (!fader)
 		return 0.0f;
 
@@ -620,6 +624,7 @@ float obs_fader_get_db(obs_fader_t *fader)
 
 bool obs_fader_set_deflection(obs_fader_t *fader, const float def)
 {
+	blog(LOG_DEBUG, "Function obs_fader_set_deflection called");
 	if (!fader)
 		return false;
 
@@ -628,6 +633,7 @@ bool obs_fader_set_deflection(obs_fader_t *fader, const float def)
 
 float obs_fader_get_deflection(obs_fader_t *fader)
 {
+	blog(LOG_DEBUG, "Function obs_fader_get_deflection called");
 	if (!fader)
 		return 0.0f;
 
@@ -640,6 +646,7 @@ float obs_fader_get_deflection(obs_fader_t *fader)
 
 bool obs_fader_set_mul(obs_fader_t *fader, const float mul)
 {
+	blog(LOG_DEBUG, "Function obs_fader_set_mul called");
 	if (!fader)
 		return false;
 
@@ -648,6 +655,7 @@ bool obs_fader_set_mul(obs_fader_t *fader, const float mul)
 
 float obs_fader_get_mul(obs_fader_t *fader)
 {
+	blog(LOG_DEBUG, "Function obs_fader_get_mul called");
 	if (!fader)
 		return 0.0f;
 
@@ -660,6 +668,7 @@ float obs_fader_get_mul(obs_fader_t *fader)
 
 bool obs_fader_attach_source(obs_fader_t *fader, obs_source_t *source)
 {
+	blog(LOG_DEBUG, "Function obs_fader_attach_source called");
 	signal_handler_t *sh;
 	float vol;
 
@@ -685,6 +694,7 @@ bool obs_fader_attach_source(obs_fader_t *fader, obs_source_t *source)
 
 void obs_fader_detach_source(obs_fader_t *fader)
 {
+	blog(LOG_DEBUG, "Function obs_fader_detach_source called");
 	signal_handler_t *sh;
 	obs_source_t *source;
 
@@ -706,6 +716,7 @@ void obs_fader_detach_source(obs_fader_t *fader)
 
 void obs_fader_add_callback(obs_fader_t *fader, obs_fader_changed_t callback, void *param)
 {
+	blog(LOG_DEBUG, "Function obs_fader_add_callback called");
 	struct fader_cb cb = {callback, param};
 
 	if (!obs_ptr_valid(fader, "obs_fader_add_callback"))
@@ -718,6 +729,7 @@ void obs_fader_add_callback(obs_fader_t *fader, obs_fader_changed_t callback, vo
 
 void obs_fader_remove_callback(obs_fader_t *fader, obs_fader_changed_t callback, void *param)
 {
+	blog(LOG_DEBUG, "Function obs_fader_remove_callback called");
 	struct fader_cb cb = {callback, param};
 
 	if (!obs_ptr_valid(fader, "obs_fader_remove_callback"))
@@ -751,6 +763,7 @@ fail:
 
 void obs_volmeter_destroy(obs_volmeter_t *volmeter)
 {
+	blog(LOG_DEBUG, "Function obs_volmeter_destroy called");
 	if (!volmeter)
 		return;
 
@@ -764,6 +777,7 @@ void obs_volmeter_destroy(obs_volmeter_t *volmeter)
 
 bool obs_volmeter_attach_source(obs_volmeter_t *volmeter, obs_source_t *source)
 {
+	blog(LOG_DEBUG, "Function obs_volmeter_attach_source called");
 	signal_handler_t *sh;
 	float vol;
 
@@ -790,6 +804,7 @@ bool obs_volmeter_attach_source(obs_volmeter_t *volmeter, obs_source_t *source)
 
 void obs_volmeter_detach_source(obs_volmeter_t *volmeter)
 {
+	blog(LOG_DEBUG, "Function obs_volmeter_detach_source called");
 	signal_handler_t *sh;
 	obs_source_t *source;
 
@@ -812,6 +827,7 @@ void obs_volmeter_detach_source(obs_volmeter_t *volmeter)
 
 void obs_volmeter_set_peak_meter_type(obs_volmeter_t *volmeter, enum obs_peak_meter_type peak_meter_type)
 {
+	blog(LOG_DEBUG, "Function obs_volmeter_set_peak_meter_type called");
 	pthread_mutex_lock(&volmeter->mutex);
 	volmeter->peak_meter_type = peak_meter_type;
 	pthread_mutex_unlock(&volmeter->mutex);
@@ -819,6 +835,7 @@ void obs_volmeter_set_peak_meter_type(obs_volmeter_t *volmeter, enum obs_peak_me
 
 int obs_volmeter_get_nr_channels(obs_volmeter_t *volmeter)
 {
+	blog(LOG_DEBUG, "Function obs_volmeter_get_nr_channels called");
 	int source_nr_audio_channels;
 	int obs_nr_audio_channels;
 
@@ -840,6 +857,7 @@ int obs_volmeter_get_nr_channels(obs_volmeter_t *volmeter)
 
 void obs_volmeter_add_callback(obs_volmeter_t *volmeter, obs_volmeter_updated_t callback, void *param)
 {
+	blog(LOG_DEBUG, "Function obs_volmeter_add_callback called");
 	struct meter_cb cb = {callback, param};
 
 	if (!obs_ptr_valid(volmeter, "obs_volmeter_add_callback"))
@@ -852,6 +870,7 @@ void obs_volmeter_add_callback(obs_volmeter_t *volmeter, obs_volmeter_updated_t 
 
 void obs_volmeter_remove_callback(obs_volmeter_t *volmeter, obs_volmeter_updated_t callback, void *param)
 {
+	blog(LOG_DEBUG, "Function obs_volmeter_remove_callback called");
 	struct meter_cb cb = {callback, param};
 
 	if (!obs_ptr_valid(volmeter, "obs_volmeter_remove_callback"))
@@ -864,15 +883,18 @@ void obs_volmeter_remove_callback(obs_volmeter_t *volmeter, obs_volmeter_updated
 
 float obs_mul_to_db(float mul)
 {
+	blog(LOG_DEBUG, "Function obs_mul_to_db called");
 	return mul_to_db(mul);
 }
 
 float obs_db_to_mul(float db)
 {
+	blog(LOG_DEBUG, "Function obs_db_to_mul called");
 	return db_to_mul(db);
 }
 
 obs_fader_conversion_t obs_fader_db_to_def(obs_fader_t *fader)
 {
+	blog(LOG_DEBUG, "Function obs_fader_db_to_def called");
 	return fader->db_to_def;
 }

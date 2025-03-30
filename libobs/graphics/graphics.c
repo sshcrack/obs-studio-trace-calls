@@ -173,6 +173,7 @@ static bool graphics_init(struct graphics_subsystem *graphics)
 
 int gs_create(graphics_t **pgraphics, const char *module, uint32_t adapter)
 {
+	blog(LOG_DEBUG, "Function gs_create called");
 	int errcode = GS_ERROR_FAIL;
 
 	graphics_t *graphics = bzalloc(sizeof(struct graphics_subsystem));
@@ -209,6 +210,7 @@ extern void gs_effect_actually_destroy(gs_effect_t *effect);
 
 void gs_destroy(graphics_t *graphics)
 {
+	blog(LOG_DEBUG, "Function gs_destroy called");
 	if (!ptr_valid(graphics, "gs_destroy"))
 		return;
 
@@ -248,6 +250,7 @@ void gs_destroy(graphics_t *graphics)
 
 void gs_enter_context(graphics_t *graphics)
 {
+	blog(LOG_DEBUG, "Function gs_enter_context called");
 	if (!ptr_valid(graphics, "gs_enter_context"))
 		return;
 
@@ -268,6 +271,7 @@ void gs_enter_context(graphics_t *graphics)
 
 void gs_leave_context(void)
 {
+	blog(LOG_DEBUG, "Function gs_leave_context called");
 	if (gs_valid("gs_leave_context")) {
 		if (!os_atomic_dec_long(&thread_graphics->ref)) {
 			graphics_t *graphics = thread_graphics;
@@ -299,6 +303,7 @@ const char *gs_get_device_name(void)
 
 int gs_get_device_type(void)
 {
+	blog(LOG_DEBUG, "Function gs_get_device_type called");
 	return gs_valid("gs_get_device_type") ? thread_graphics->exports.device_get_type() : -1;
 }
 
@@ -309,6 +314,7 @@ static inline struct matrix4 *top_matrix(graphics_t *graphics)
 
 void gs_matrix_push(void)
 {
+	blog(LOG_DEBUG, "Function gs_matrix_push called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_matrix_push"))
@@ -323,6 +329,7 @@ void gs_matrix_push(void)
 
 void gs_matrix_pop(void)
 {
+	blog(LOG_DEBUG, "Function gs_matrix_pop called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_matrix_pop"))
@@ -339,6 +346,7 @@ void gs_matrix_pop(void)
 
 void gs_matrix_identity(void)
 {
+	blog(LOG_DEBUG, "Function gs_matrix_identity called");
 	struct matrix4 *top_mat;
 
 	if (!gs_valid("gs_matrix_identity"))
@@ -351,6 +359,7 @@ void gs_matrix_identity(void)
 
 void gs_matrix_transpose(void)
 {
+	blog(LOG_DEBUG, "Function gs_matrix_transpose called");
 	struct matrix4 *top_mat;
 
 	if (!gs_valid("gs_matrix_transpose"))
@@ -363,6 +372,7 @@ void gs_matrix_transpose(void)
 
 void gs_matrix_set(const struct matrix4 *matrix)
 {
+	blog(LOG_DEBUG, "Function gs_matrix_set called");
 	struct matrix4 *top_mat;
 
 	if (!gs_valid("gs_matrix_set"))
@@ -375,6 +385,7 @@ void gs_matrix_set(const struct matrix4 *matrix)
 
 void gs_matrix_get(struct matrix4 *dst)
 {
+	blog(LOG_DEBUG, "Function gs_matrix_get called");
 	struct matrix4 *top_mat;
 
 	if (!gs_valid("gs_matrix_get"))
@@ -387,6 +398,7 @@ void gs_matrix_get(struct matrix4 *dst)
 
 void gs_matrix_mul(const struct matrix4 *matrix)
 {
+	blog(LOG_DEBUG, "Function gs_matrix_mul called");
 	struct matrix4 *top_mat;
 
 	if (!gs_valid("gs_matrix_mul"))
@@ -399,6 +411,7 @@ void gs_matrix_mul(const struct matrix4 *matrix)
 
 void gs_matrix_rotquat(const struct quat *rot)
 {
+	blog(LOG_DEBUG, "Function gs_matrix_rotquat called");
 	struct matrix4 *top_mat;
 
 	if (!gs_valid("gs_matrix_rotquat"))
@@ -411,6 +424,7 @@ void gs_matrix_rotquat(const struct quat *rot)
 
 void gs_matrix_rotaa(const struct axisang *rot)
 {
+	blog(LOG_DEBUG, "Function gs_matrix_rotaa called");
 	struct matrix4 *top_mat;
 
 	if (!gs_valid("gs_matrix_rotaa"))
@@ -423,6 +437,7 @@ void gs_matrix_rotaa(const struct axisang *rot)
 
 void gs_matrix_translate(const struct vec3 *pos)
 {
+	blog(LOG_DEBUG, "Function gs_matrix_translate called");
 	struct matrix4 *top_mat;
 
 	if (!gs_valid("gs_matrix_translate"))
@@ -435,6 +450,7 @@ void gs_matrix_translate(const struct vec3 *pos)
 
 void gs_matrix_scale(const struct vec3 *scale)
 {
+	blog(LOG_DEBUG, "Function gs_matrix_scale called");
 	struct matrix4 *top_mat;
 
 	if (!gs_valid("gs_matrix_scale"))
@@ -447,6 +463,7 @@ void gs_matrix_scale(const struct vec3 *scale)
 
 void gs_matrix_rotaa4f(float x, float y, float z, float angle)
 {
+	blog(LOG_DEBUG, "Function gs_matrix_rotaa4f called");
 	struct matrix4 *top_mat;
 	struct axisang aa;
 
@@ -462,6 +479,7 @@ void gs_matrix_rotaa4f(float x, float y, float z, float angle)
 
 void gs_matrix_translate3f(float x, float y, float z)
 {
+	blog(LOG_DEBUG, "Function gs_matrix_translate3f called");
 	struct matrix4 *top_mat;
 	struct vec3 p;
 
@@ -477,6 +495,7 @@ void gs_matrix_translate3f(float x, float y, float z)
 
 void gs_matrix_scale3f(float x, float y, float z)
 {
+	blog(LOG_DEBUG, "Function gs_matrix_scale3f called");
 	struct matrix4 *top_mat = top_matrix(thread_graphics);
 	struct vec3 p;
 
@@ -497,6 +516,7 @@ static inline void reset_immediate_arrays(graphics_t *graphics)
 
 void gs_render_start(bool b_new)
 {
+	blog(LOG_DEBUG, "Function gs_render_start called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_render_start"))
@@ -530,6 +550,7 @@ static inline size_t min_size(const size_t a, const size_t b)
 
 void gs_render_stop(enum gs_draw_mode mode)
 {
+	blog(LOG_DEBUG, "Function gs_render_stop called");
 	graphics_t *graphics = thread_graphics;
 	size_t i, num;
 
@@ -630,6 +651,7 @@ gs_vertbuffer_t *gs_render_save(void)
 
 void gs_vertex2f(float x, float y)
 {
+	blog(LOG_DEBUG, "Function gs_vertex2f called");
 	struct vec3 v3;
 
 	if (!gs_valid("gs_verte"))
@@ -641,6 +663,7 @@ void gs_vertex2f(float x, float y)
 
 void gs_vertex3f(float x, float y, float z)
 {
+	blog(LOG_DEBUG, "Function gs_vertex3f called");
 	struct vec3 v3;
 
 	if (!gs_valid("gs_vertex3f"))
@@ -652,6 +675,7 @@ void gs_vertex3f(float x, float y, float z)
 
 void gs_normal3f(float x, float y, float z)
 {
+	blog(LOG_DEBUG, "Function gs_normal3f called");
 	struct vec3 v3;
 
 	if (!gs_valid("gs_normal3f"))
@@ -676,6 +700,7 @@ static inline bool validvertsize(graphics_t *graphics, size_t num, const char *n
 
 void gs_color(uint32_t color)
 {
+	blog(LOG_DEBUG, "Function gs_color called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_color"))
@@ -688,6 +713,7 @@ void gs_color(uint32_t color)
 
 void gs_texcoord(float x, float y, int unit)
 {
+	blog(LOG_DEBUG, "Function gs_texcoord called");
 	struct vec2 v2;
 
 	if (!gs_valid("gs_texcoord"))
@@ -699,6 +725,7 @@ void gs_texcoord(float x, float y, int unit)
 
 void gs_vertex2v(const struct vec2 *v)
 {
+	blog(LOG_DEBUG, "Function gs_vertex2v called");
 	struct vec3 v3;
 
 	if (!gs_valid("gs_vertex2v"))
@@ -710,6 +737,7 @@ void gs_vertex2v(const struct vec2 *v)
 
 void gs_vertex3v(const struct vec3 *v)
 {
+	blog(LOG_DEBUG, "Function gs_vertex3v called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_vertex3v"))
@@ -722,6 +750,7 @@ void gs_vertex3v(const struct vec3 *v)
 
 void gs_normal3v(const struct vec3 *v)
 {
+	blog(LOG_DEBUG, "Function gs_normal3v called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_normal3v"))
@@ -734,12 +763,14 @@ void gs_normal3v(const struct vec3 *v)
 
 void gs_color4v(const struct vec4 *v)
 {
+	blog(LOG_DEBUG, "Function gs_color4v called");
 	/* TODO */
 	UNUSED_PARAMETER(v);
 }
 
 void gs_texcoord2v(const struct vec2 *v, int unit)
 {
+	blog(LOG_DEBUG, "Function gs_texcoord2v called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_texcoord2v"))
@@ -980,6 +1011,7 @@ static inline void build_sprite_rect(struct gs_vb_data *data, gs_texture_t *tex,
 
 void gs_draw_sprite(gs_texture_t *tex, uint32_t flip, uint32_t width, uint32_t height)
 {
+	blog(LOG_DEBUG, "Function gs_draw_sprite called");
 	graphics_t *graphics = thread_graphics;
 	float fcx, fcy;
 	struct gs_vb_data *data;
@@ -1016,6 +1048,7 @@ void gs_draw_sprite(gs_texture_t *tex, uint32_t flip, uint32_t width, uint32_t h
 void gs_draw_sprite_subregion(gs_texture_t *tex, uint32_t flip, uint32_t sub_x, uint32_t sub_y, uint32_t sub_cx,
 			      uint32_t sub_cy)
 {
+	blog(LOG_DEBUG, "Function gs_draw_sprite_subregion called");
 	graphics_t *graphics = thread_graphics;
 	float fcx, fcy;
 	struct gs_vb_data *data;
@@ -1043,6 +1076,7 @@ void gs_draw_sprite_subregion(gs_texture_t *tex, uint32_t flip, uint32_t sub_x, 
 void gs_draw_cube_backdrop(gs_texture_t *cubetex, const struct quat *rot, float left, float right, float top,
 			   float bottom, float znear)
 {
+	blog(LOG_DEBUG, "Function gs_draw_cube_backdrop called");
 	/* TODO */
 	UNUSED_PARAMETER(cubetex);
 	UNUSED_PARAMETER(rot);
@@ -1055,6 +1089,7 @@ void gs_draw_cube_backdrop(gs_texture_t *cubetex, const struct quat *rot, float 
 
 void gs_reset_viewport(void)
 {
+	blog(LOG_DEBUG, "Function gs_reset_viewport called");
 	uint32_t cx, cy;
 
 	if (!gs_valid("gs_reset_viewport"))
@@ -1066,6 +1101,7 @@ void gs_reset_viewport(void)
 
 void gs_set_2d_mode(void)
 {
+	blog(LOG_DEBUG, "Function gs_set_2d_mode called");
 	uint32_t cx, cy;
 
 	if (!gs_valid("gs_set_2d_mode"))
@@ -1077,6 +1113,7 @@ void gs_set_2d_mode(void)
 
 void gs_set_3d_mode(double fovy, double znear, double zvar)
 {
+	blog(LOG_DEBUG, "Function gs_set_3d_mode called");
 	/* TODO */
 	UNUSED_PARAMETER(fovy);
 	UNUSED_PARAMETER(znear);
@@ -1085,6 +1122,7 @@ void gs_set_3d_mode(double fovy, double znear, double zvar)
 
 void gs_viewport_push(void)
 {
+	blog(LOG_DEBUG, "Function gs_viewport_push called");
 	if (!gs_valid("gs_viewport_push"))
 		return;
 
@@ -1094,6 +1132,7 @@ void gs_viewport_push(void)
 
 void gs_viewport_pop(void)
 {
+	blog(LOG_DEBUG, "Function gs_viewport_pop called");
 	struct gs_rect *rect;
 
 	if (!gs_valid("gs_viewport_pop"))
@@ -1108,6 +1147,7 @@ void gs_viewport_pop(void)
 
 void gs_texture_set_image(gs_texture_t *tex, const uint8_t *data, uint32_t linesize, bool flip)
 {
+	blog(LOG_DEBUG, "Function gs_texture_set_image called");
 	uint8_t *ptr;
 	uint32_t linesize_out;
 	size_t row_copy;
@@ -1149,6 +1189,7 @@ void gs_texture_set_image(gs_texture_t *tex, const uint8_t *data, uint32_t lines
 
 void gs_cubetexture_set_image(gs_texture_t *cubetex, uint32_t side, const void *data, uint32_t linesize, bool invert)
 {
+	blog(LOG_DEBUG, "Function gs_cubetexture_set_image called");
 	/* TODO */
 	UNUSED_PARAMETER(cubetex);
 	UNUSED_PARAMETER(side);
@@ -1159,6 +1200,7 @@ void gs_cubetexture_set_image(gs_texture_t *cubetex, uint32_t side, const void *
 
 void gs_perspective(float angle, float aspect, float near, float far)
 {
+	blog(LOG_DEBUG, "Function gs_perspective called");
 	graphics_t *graphics = thread_graphics;
 	float xmin, xmax, ymin, ymax;
 
@@ -1176,6 +1218,7 @@ void gs_perspective(float angle, float aspect, float near, float far)
 
 void gs_blend_state_push(void)
 {
+	blog(LOG_DEBUG, "Function gs_blend_state_push called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_blend_state_push"))
@@ -1186,6 +1229,7 @@ void gs_blend_state_push(void)
 
 void gs_blend_state_pop(void)
 {
+	blog(LOG_DEBUG, "Function gs_blend_state_pop called");
 	graphics_t *graphics = thread_graphics;
 	struct blend_state *state;
 
@@ -1205,6 +1249,7 @@ void gs_blend_state_pop(void)
 
 void gs_reset_blend_state(void)
 {
+	blog(LOG_DEBUG, "Function gs_reset_blend_state called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_preprocessor_name"))
@@ -1250,6 +1295,7 @@ gs_swapchain_t *gs_swapchain_create(const struct gs_init_data *data)
 
 void gs_resize(uint32_t x, uint32_t y)
 {
+	blog(LOG_DEBUG, "Function gs_resize called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_resize"))
@@ -1260,6 +1306,7 @@ void gs_resize(uint32_t x, uint32_t y)
 
 void gs_update_color_space(void)
 {
+	blog(LOG_DEBUG, "Function gs_update_color_space called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_update_color_space"))
@@ -1270,6 +1317,7 @@ void gs_update_color_space(void)
 
 void gs_get_size(uint32_t *x, uint32_t *y)
 {
+	blog(LOG_DEBUG, "Function gs_get_size called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_get_size"))
@@ -1280,6 +1328,7 @@ void gs_get_size(uint32_t *x, uint32_t *y)
 
 uint32_t gs_get_width(void)
 {
+	blog(LOG_DEBUG, "Function gs_get_width called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_get_width"))
@@ -1290,6 +1339,7 @@ uint32_t gs_get_width(void)
 
 uint32_t gs_get_height(void)
 {
+	blog(LOG_DEBUG, "Function gs_get_height called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_get_height"))
@@ -1348,6 +1398,7 @@ gs_texture_t *gs_texture_create_from_dmabuf(unsigned int width, unsigned int hei
 
 bool gs_query_dmabuf_capabilities(enum gs_dmabuf_flags *dmabuf_flags, uint32_t **drm_formats, size_t *n_formats)
 {
+	blog(LOG_DEBUG, "Function gs_query_dmabuf_capabilities called");
 	graphics_t *graphics = thread_graphics;
 
 	return graphics->exports.device_query_dmabuf_capabilities(graphics->device, dmabuf_flags, drm_formats,
@@ -1356,6 +1407,7 @@ bool gs_query_dmabuf_capabilities(enum gs_dmabuf_flags *dmabuf_flags, uint32_t *
 
 bool gs_query_dmabuf_modifiers_for_format(uint32_t drm_format, uint64_t **modifiers, size_t *n_modifiers)
 {
+	blog(LOG_DEBUG, "Function gs_query_dmabuf_modifiers_for_format called");
 	graphics_t *graphics = thread_graphics;
 
 	return graphics->exports.device_query_dmabuf_modifiers_for_format(graphics->device, drm_format, modifiers,
@@ -1373,6 +1425,7 @@ gs_texture_t *gs_texture_create_from_pixmap(uint32_t width, uint32_t height, enu
 
 bool gs_query_sync_capabilities(void)
 {
+	blog(LOG_DEBUG, "Function gs_query_sync_capabilities called");
 	graphics_t *graphics = thread_graphics;
 
 	return graphics->exports.device_query_sync_capabilities(graphics->device);
@@ -1395,6 +1448,7 @@ gs_sync_t *gs_sync_create_from_syncobj_timeline_point(int syncobj_fd, uint64_t t
 
 void gs_sync_destroy(gs_sync_t *sync)
 {
+	blog(LOG_DEBUG, "Function gs_sync_destroy called");
 	graphics_t *graphics = thread_graphics;
 
 	return graphics->exports.device_sync_destroy(graphics->device, sync);
@@ -1402,6 +1456,7 @@ void gs_sync_destroy(gs_sync_t *sync)
 
 bool gs_sync_export_syncobj_timeline_point(gs_sync_t *sync, int syncobj_fd, uint64_t timeline_point)
 {
+	blog(LOG_DEBUG, "Function gs_sync_export_syncobj_timeline_point called");
 	graphics_t *graphics = thread_graphics;
 
 	return graphics->exports.device_sync_export_syncobj_timeline_point(graphics->device, sync, syncobj_fd,
@@ -1410,6 +1465,7 @@ bool gs_sync_export_syncobj_timeline_point(gs_sync_t *sync, int syncobj_fd, uint
 
 bool gs_sync_signal_syncobj_timeline_point(int syncobj_fd, uint64_t timeline_point)
 {
+	blog(LOG_DEBUG, "Function gs_sync_signal_syncobj_timeline_point called");
 	graphics_t *graphics = thread_graphics;
 
 	return graphics->exports.device_sync_signal_syncobj_timeline_point(graphics->device, syncobj_fd,
@@ -1418,6 +1474,7 @@ bool gs_sync_signal_syncobj_timeline_point(int syncobj_fd, uint64_t timeline_poi
 
 bool gs_sync_wait(gs_sync_t *sync)
 {
+	blog(LOG_DEBUG, "Function gs_sync_wait called");
 	graphics_t *graphics = thread_graphics;
 
 	return graphics->exports.device_sync_wait(graphics->device, sync);
@@ -1599,6 +1656,7 @@ gs_timer_range_t *gs_timer_range_create()
 
 enum gs_texture_type gs_get_texture_type(const gs_texture_t *texture)
 {
+	blog(LOG_DEBUG, "Function gs_get_texture_type called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_get_texture_type", texture))
@@ -1609,6 +1667,7 @@ enum gs_texture_type gs_get_texture_type(const gs_texture_t *texture)
 
 void gs_load_vertexbuffer(gs_vertbuffer_t *vertbuffer)
 {
+	blog(LOG_DEBUG, "Function gs_load_vertexbuffer called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_load_vertexbuffer"))
@@ -1619,6 +1678,7 @@ void gs_load_vertexbuffer(gs_vertbuffer_t *vertbuffer)
 
 void gs_load_indexbuffer(gs_indexbuffer_t *indexbuffer)
 {
+	blog(LOG_DEBUG, "Function gs_load_indexbuffer called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_load_indexbuffer"))
@@ -1629,6 +1689,7 @@ void gs_load_indexbuffer(gs_indexbuffer_t *indexbuffer)
 
 void gs_load_texture(gs_texture_t *tex, int unit)
 {
+	blog(LOG_DEBUG, "Function gs_load_texture called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_load_texture"))
@@ -1639,6 +1700,7 @@ void gs_load_texture(gs_texture_t *tex, int unit)
 
 void gs_load_samplerstate(gs_samplerstate_t *samplerstate, int unit)
 {
+	blog(LOG_DEBUG, "Function gs_load_samplerstate called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_load_samplerstate"))
@@ -1649,6 +1711,7 @@ void gs_load_samplerstate(gs_samplerstate_t *samplerstate, int unit)
 
 void gs_load_vertexshader(gs_shader_t *vertshader)
 {
+	blog(LOG_DEBUG, "Function gs_load_vertexshader called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_load_vertexshader"))
@@ -1659,6 +1722,7 @@ void gs_load_vertexshader(gs_shader_t *vertshader)
 
 void gs_load_pixelshader(gs_shader_t *pixelshader)
 {
+	blog(LOG_DEBUG, "Function gs_load_pixelshader called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_load_pixelshader"))
@@ -1669,6 +1733,7 @@ void gs_load_pixelshader(gs_shader_t *pixelshader)
 
 void gs_load_default_samplerstate(bool b_3d, int unit)
 {
+	blog(LOG_DEBUG, "Function gs_load_default_samplerstate called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_load_default_samplerstate"))
@@ -1699,6 +1764,7 @@ gs_shader_t *gs_get_pixel_shader(void)
 
 enum gs_color_space gs_get_color_space(void)
 {
+	blog(LOG_DEBUG, "Function gs_get_color_space called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_get_color_space"))
@@ -1729,6 +1795,7 @@ gs_zstencil_t *gs_get_zstencil_target(void)
 
 void gs_set_render_target(gs_texture_t *tex, gs_zstencil_t *zstencil)
 {
+	blog(LOG_DEBUG, "Function gs_set_render_target called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_set_render_target"))
@@ -1739,6 +1806,7 @@ void gs_set_render_target(gs_texture_t *tex, gs_zstencil_t *zstencil)
 
 void gs_set_render_target_with_color_space(gs_texture_t *tex, gs_zstencil_t *zstencil, enum gs_color_space space)
 {
+	blog(LOG_DEBUG, "Function gs_set_render_target_with_color_space called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_set_render_target_with_color_space"))
@@ -1749,6 +1817,7 @@ void gs_set_render_target_with_color_space(gs_texture_t *tex, gs_zstencil_t *zst
 
 void gs_set_cube_render_target(gs_texture_t *cubetex, int side, gs_zstencil_t *zstencil)
 {
+	blog(LOG_DEBUG, "Function gs_set_cube_render_target called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_set_cube_render_target"))
@@ -1759,6 +1828,7 @@ void gs_set_cube_render_target(gs_texture_t *cubetex, int side, gs_zstencil_t *z
 
 void gs_enable_framebuffer_srgb(bool enable)
 {
+	blog(LOG_DEBUG, "Function gs_enable_framebuffer_srgb called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_enable_framebuffer_srgb"))
@@ -1769,6 +1839,7 @@ void gs_enable_framebuffer_srgb(bool enable)
 
 bool gs_framebuffer_srgb_enabled(void)
 {
+	blog(LOG_DEBUG, "Function gs_framebuffer_srgb_enabled called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_framebuffer_srgb_enabled"))
@@ -1779,6 +1850,7 @@ bool gs_framebuffer_srgb_enabled(void)
 
 bool gs_get_linear_srgb(void)
 {
+	blog(LOG_DEBUG, "Function gs_get_linear_srgb called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_get_linear_srgb"))
@@ -1789,6 +1861,7 @@ bool gs_get_linear_srgb(void)
 
 bool gs_set_linear_srgb(bool linear_srgb)
 {
+	blog(LOG_DEBUG, "Function gs_set_linear_srgb called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_set_linear_srgb"))
@@ -1801,6 +1874,7 @@ bool gs_set_linear_srgb(bool linear_srgb)
 
 void gs_copy_texture(gs_texture_t *dst, gs_texture_t *src)
 {
+	blog(LOG_DEBUG, "Function gs_copy_texture called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p2("gs_copy_texture", dst, src))
@@ -1812,6 +1886,7 @@ void gs_copy_texture(gs_texture_t *dst, gs_texture_t *src)
 void gs_copy_texture_region(gs_texture_t *dst, uint32_t dst_x, uint32_t dst_y, gs_texture_t *src, uint32_t src_x,
 			    uint32_t src_y, uint32_t src_w, uint32_t src_h)
 {
+	blog(LOG_DEBUG, "Function gs_copy_texture_region called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_copy_texture_region", dst))
@@ -1823,6 +1898,7 @@ void gs_copy_texture_region(gs_texture_t *dst, uint32_t dst_x, uint32_t dst_y, g
 
 void gs_stage_texture(gs_stagesurf_t *dst, gs_texture_t *src)
 {
+	blog(LOG_DEBUG, "Function gs_stage_texture called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_stage_texture"))
@@ -1833,6 +1909,7 @@ void gs_stage_texture(gs_stagesurf_t *dst, gs_texture_t *src)
 
 void gs_begin_frame(void)
 {
+	blog(LOG_DEBUG, "Function gs_begin_frame called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_begin_frame"))
@@ -1843,6 +1920,7 @@ void gs_begin_frame(void)
 
 void gs_begin_scene(void)
 {
+	blog(LOG_DEBUG, "Function gs_begin_scene called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_begin_scene"))
@@ -1853,6 +1931,7 @@ void gs_begin_scene(void)
 
 void gs_draw(enum gs_draw_mode draw_mode, uint32_t start_vert, uint32_t num_verts)
 {
+	blog(LOG_DEBUG, "Function gs_draw called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_draw"))
@@ -1863,6 +1942,7 @@ void gs_draw(enum gs_draw_mode draw_mode, uint32_t start_vert, uint32_t num_vert
 
 void gs_end_scene(void)
 {
+	blog(LOG_DEBUG, "Function gs_end_scene called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_end_scene"))
@@ -1873,6 +1953,7 @@ void gs_end_scene(void)
 
 void gs_load_swapchain(gs_swapchain_t *swapchain)
 {
+	blog(LOG_DEBUG, "Function gs_load_swapchain called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_load_swapchain"))
@@ -1883,6 +1964,7 @@ void gs_load_swapchain(gs_swapchain_t *swapchain)
 
 void gs_clear(uint32_t clear_flags, const struct vec4 *color, float depth, uint8_t stencil)
 {
+	blog(LOG_DEBUG, "Function gs_clear called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_clear"))
@@ -1893,6 +1975,7 @@ void gs_clear(uint32_t clear_flags, const struct vec4 *color, float depth, uint8
 
 bool gs_is_present_ready(void)
 {
+	blog(LOG_DEBUG, "Function gs_is_present_ready called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_is_present_ready"))
@@ -1903,6 +1986,7 @@ bool gs_is_present_ready(void)
 
 void gs_present(void)
 {
+	blog(LOG_DEBUG, "Function gs_present called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_present"))
@@ -1913,6 +1997,7 @@ void gs_present(void)
 
 void gs_flush(void)
 {
+	blog(LOG_DEBUG, "Function gs_flush called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_flush"))
@@ -1923,6 +2008,7 @@ void gs_flush(void)
 
 void gs_set_cull_mode(enum gs_cull_mode mode)
 {
+	blog(LOG_DEBUG, "Function gs_set_cull_mode called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_set_cull_mode"))
@@ -1933,6 +2019,7 @@ void gs_set_cull_mode(enum gs_cull_mode mode)
 
 enum gs_cull_mode gs_get_cull_mode(void)
 {
+	blog(LOG_DEBUG, "Function gs_get_cull_mode called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_get_cull_mode"))
@@ -1943,6 +2030,7 @@ enum gs_cull_mode gs_get_cull_mode(void)
 
 void gs_enable_blending(bool enable)
 {
+	blog(LOG_DEBUG, "Function gs_enable_blending called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_enable_blending"))
@@ -1954,6 +2042,7 @@ void gs_enable_blending(bool enable)
 
 void gs_enable_depth_test(bool enable)
 {
+	blog(LOG_DEBUG, "Function gs_enable_depth_test called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_enable_depth_test"))
@@ -1964,6 +2053,7 @@ void gs_enable_depth_test(bool enable)
 
 void gs_enable_stencil_test(bool enable)
 {
+	blog(LOG_DEBUG, "Function gs_enable_stencil_test called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_enable_stencil_test"))
@@ -1974,6 +2064,7 @@ void gs_enable_stencil_test(bool enable)
 
 void gs_enable_stencil_write(bool enable)
 {
+	blog(LOG_DEBUG, "Function gs_enable_stencil_write called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_enable_stencil_write"))
@@ -1984,6 +2075,7 @@ void gs_enable_stencil_write(bool enable)
 
 void gs_enable_color(bool red, bool green, bool blue, bool alpha)
 {
+	blog(LOG_DEBUG, "Function gs_enable_color called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_enable_color"))
@@ -1994,6 +2086,7 @@ void gs_enable_color(bool red, bool green, bool blue, bool alpha)
 
 void gs_blend_function(enum gs_blend_type src, enum gs_blend_type dest)
 {
+	blog(LOG_DEBUG, "Function gs_blend_function called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_blend_function"))
@@ -2009,6 +2102,7 @@ void gs_blend_function(enum gs_blend_type src, enum gs_blend_type dest)
 void gs_blend_function_separate(enum gs_blend_type src_c, enum gs_blend_type dest_c, enum gs_blend_type src_a,
 				enum gs_blend_type dest_a)
 {
+	blog(LOG_DEBUG, "Function gs_blend_function_separate called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_blend_function_separate"))
@@ -2023,6 +2117,7 @@ void gs_blend_function_separate(enum gs_blend_type src_c, enum gs_blend_type des
 
 void gs_blend_op(enum gs_blend_op_type op)
 {
+	blog(LOG_DEBUG, "Function gs_blend_op called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_blend_op"))
@@ -2034,6 +2129,7 @@ void gs_blend_op(enum gs_blend_op_type op)
 
 void gs_depth_function(enum gs_depth_test test)
 {
+	blog(LOG_DEBUG, "Function gs_depth_function called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_depth_function"))
@@ -2044,6 +2140,7 @@ void gs_depth_function(enum gs_depth_test test)
 
 void gs_stencil_function(enum gs_stencil_side side, enum gs_depth_test test)
 {
+	blog(LOG_DEBUG, "Function gs_stencil_function called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_stencil_function"))
@@ -2055,6 +2152,7 @@ void gs_stencil_function(enum gs_stencil_side side, enum gs_depth_test test)
 void gs_stencil_op(enum gs_stencil_side side, enum gs_stencil_op_type fail, enum gs_stencil_op_type zfail,
 		   enum gs_stencil_op_type zpass)
 {
+	blog(LOG_DEBUG, "Function gs_stencil_op called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_stencil_op"))
@@ -2065,6 +2163,7 @@ void gs_stencil_op(enum gs_stencil_side side, enum gs_stencil_op_type fail, enum
 
 void gs_set_viewport(int x, int y, int width, int height)
 {
+	blog(LOG_DEBUG, "Function gs_set_viewport called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_set_viewport"))
@@ -2075,6 +2174,7 @@ void gs_set_viewport(int x, int y, int width, int height)
 
 void gs_get_viewport(struct gs_rect *rect)
 {
+	blog(LOG_DEBUG, "Function gs_get_viewport called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_get_viewport", rect))
@@ -2085,6 +2185,7 @@ void gs_get_viewport(struct gs_rect *rect)
 
 void gs_set_scissor_rect(const struct gs_rect *rect)
 {
+	blog(LOG_DEBUG, "Function gs_set_scissor_rect called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_set_scissor_rect"))
@@ -2095,6 +2196,7 @@ void gs_set_scissor_rect(const struct gs_rect *rect)
 
 void gs_ortho(float left, float right, float top, float bottom, float znear, float zfar)
 {
+	blog(LOG_DEBUG, "Function gs_ortho called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_ortho"))
@@ -2105,6 +2207,7 @@ void gs_ortho(float left, float right, float top, float bottom, float znear, flo
 
 void gs_frustum(float left, float right, float top, float bottom, float znear, float zfar)
 {
+	blog(LOG_DEBUG, "Function gs_frustum called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_frustum"))
@@ -2115,6 +2218,7 @@ void gs_frustum(float left, float right, float top, float bottom, float znear, f
 
 void gs_projection_push(void)
 {
+	blog(LOG_DEBUG, "Function gs_projection_push called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_projection_push"))
@@ -2125,6 +2229,7 @@ void gs_projection_push(void)
 
 void gs_projection_pop(void)
 {
+	blog(LOG_DEBUG, "Function gs_projection_pop called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_projection_pop"))
@@ -2135,6 +2240,7 @@ void gs_projection_pop(void)
 
 void gs_swapchain_destroy(gs_swapchain_t *swapchain)
 {
+	blog(LOG_DEBUG, "Function gs_swapchain_destroy called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_swapchain_destroy"))
@@ -2147,6 +2253,7 @@ void gs_swapchain_destroy(gs_swapchain_t *swapchain)
 
 void gs_shader_destroy(gs_shader_t *shader)
 {
+	blog(LOG_DEBUG, "Function gs_shader_destroy called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_shader_destroy"))
@@ -2159,6 +2266,7 @@ void gs_shader_destroy(gs_shader_t *shader)
 
 int gs_shader_get_num_params(const gs_shader_t *shader)
 {
+	blog(LOG_DEBUG, "Function gs_shader_get_num_params called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_shader_get_num_params", shader))
@@ -2209,6 +2317,7 @@ gs_sparam_t *gs_shader_get_world_matrix(const gs_shader_t *shader)
 
 void gs_shader_get_param_info(const gs_sparam_t *param, struct gs_shader_param_info *info)
 {
+	blog(LOG_DEBUG, "Function gs_shader_get_param_info called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p2("gs_shader_get_param_info", param, info))
@@ -2219,6 +2328,7 @@ void gs_shader_get_param_info(const gs_sparam_t *param, struct gs_shader_param_i
 
 void gs_shader_set_bool(gs_sparam_t *param, bool val)
 {
+	blog(LOG_DEBUG, "Function gs_shader_set_bool called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_shader_set_bool", param))
@@ -2229,6 +2339,7 @@ void gs_shader_set_bool(gs_sparam_t *param, bool val)
 
 void gs_shader_set_float(gs_sparam_t *param, float val)
 {
+	blog(LOG_DEBUG, "Function gs_shader_set_float called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_shader_set_float", param))
@@ -2239,6 +2350,7 @@ void gs_shader_set_float(gs_sparam_t *param, float val)
 
 void gs_shader_set_int(gs_sparam_t *param, int val)
 {
+	blog(LOG_DEBUG, "Function gs_shader_set_int called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_shader_set_int", param))
@@ -2249,6 +2361,7 @@ void gs_shader_set_int(gs_sparam_t *param, int val)
 
 void gs_shader_set_matrix3(gs_sparam_t *param, const struct matrix3 *val)
 {
+	blog(LOG_DEBUG, "Function gs_shader_set_matrix3 called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p2("gs_shader_set_matrix3", param, val))
@@ -2259,6 +2372,7 @@ void gs_shader_set_matrix3(gs_sparam_t *param, const struct matrix3 *val)
 
 void gs_shader_set_matrix4(gs_sparam_t *param, const struct matrix4 *val)
 {
+	blog(LOG_DEBUG, "Function gs_shader_set_matrix4 called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p2("gs_shader_set_matrix4", param, val))
@@ -2269,6 +2383,7 @@ void gs_shader_set_matrix4(gs_sparam_t *param, const struct matrix4 *val)
 
 void gs_shader_set_vec2(gs_sparam_t *param, const struct vec2 *val)
 {
+	blog(LOG_DEBUG, "Function gs_shader_set_vec2 called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p2("gs_shader_set_vec2", param, val))
@@ -2279,6 +2394,7 @@ void gs_shader_set_vec2(gs_sparam_t *param, const struct vec2 *val)
 
 void gs_shader_set_vec3(gs_sparam_t *param, const struct vec3 *val)
 {
+	blog(LOG_DEBUG, "Function gs_shader_set_vec3 called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p2("gs_shader_set_vec3", param, val))
@@ -2289,6 +2405,7 @@ void gs_shader_set_vec3(gs_sparam_t *param, const struct vec3 *val)
 
 void gs_shader_set_vec4(gs_sparam_t *param, const struct vec4 *val)
 {
+	blog(LOG_DEBUG, "Function gs_shader_set_vec4 called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p2("gs_shader_set_vec4", param, val))
@@ -2299,6 +2416,7 @@ void gs_shader_set_vec4(gs_sparam_t *param, const struct vec4 *val)
 
 void gs_shader_set_texture(gs_sparam_t *param, gs_texture_t *val)
 {
+	blog(LOG_DEBUG, "Function gs_shader_set_texture called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_shader_set_texture", param))
@@ -2309,6 +2427,7 @@ void gs_shader_set_texture(gs_sparam_t *param, gs_texture_t *val)
 
 void gs_shader_set_val(gs_sparam_t *param, const void *val, size_t size)
 {
+	blog(LOG_DEBUG, "Function gs_shader_set_val called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p2("gs_shader_set_val", param, val))
@@ -2319,6 +2438,7 @@ void gs_shader_set_val(gs_sparam_t *param, const void *val, size_t size)
 
 void gs_shader_set_default(gs_sparam_t *param)
 {
+	blog(LOG_DEBUG, "Function gs_shader_set_default called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_shader_set_default", param))
@@ -2329,6 +2449,7 @@ void gs_shader_set_default(gs_sparam_t *param)
 
 void gs_shader_set_next_sampler(gs_sparam_t *param, gs_samplerstate_t *sampler)
 {
+	blog(LOG_DEBUG, "Function gs_shader_set_next_sampler called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_shader_set_next_sampler", param))
@@ -2339,6 +2460,7 @@ void gs_shader_set_next_sampler(gs_sparam_t *param, gs_samplerstate_t *sampler)
 
 void gs_texture_destroy(gs_texture_t *tex)
 {
+	blog(LOG_DEBUG, "Function gs_texture_destroy called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_texture_destroy"))
@@ -2351,6 +2473,7 @@ void gs_texture_destroy(gs_texture_t *tex)
 
 uint32_t gs_texture_get_width(const gs_texture_t *tex)
 {
+	blog(LOG_DEBUG, "Function gs_texture_get_width called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_texture_get_width", tex))
@@ -2361,6 +2484,7 @@ uint32_t gs_texture_get_width(const gs_texture_t *tex)
 
 uint32_t gs_texture_get_height(const gs_texture_t *tex)
 {
+	blog(LOG_DEBUG, "Function gs_texture_get_height called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_texture_get_height", tex))
@@ -2371,6 +2495,7 @@ uint32_t gs_texture_get_height(const gs_texture_t *tex)
 
 enum gs_color_format gs_texture_get_color_format(const gs_texture_t *tex)
 {
+	blog(LOG_DEBUG, "Function gs_texture_get_color_format called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_texture_get_color_format", tex))
@@ -2381,6 +2506,7 @@ enum gs_color_format gs_texture_get_color_format(const gs_texture_t *tex)
 
 bool gs_texture_map(gs_texture_t *tex, uint8_t **ptr, uint32_t *linesize)
 {
+	blog(LOG_DEBUG, "Function gs_texture_map called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p3("gs_texture_map", tex, ptr, linesize))
@@ -2391,6 +2517,7 @@ bool gs_texture_map(gs_texture_t *tex, uint8_t **ptr, uint32_t *linesize)
 
 void gs_texture_unmap(gs_texture_t *tex)
 {
+	blog(LOG_DEBUG, "Function gs_texture_unmap called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_texture_unmap", tex))
@@ -2401,6 +2528,7 @@ void gs_texture_unmap(gs_texture_t *tex)
 
 bool gs_texture_is_rect(const gs_texture_t *tex)
 {
+	blog(LOG_DEBUG, "Function gs_texture_is_rect called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_texture_is_rect", tex))
@@ -2424,6 +2552,7 @@ void *gs_texture_get_obj(gs_texture_t *tex)
 
 void gs_cubetexture_destroy(gs_texture_t *cubetex)
 {
+	blog(LOG_DEBUG, "Function gs_cubetexture_destroy called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_cubetexture_destroy"))
@@ -2436,6 +2565,7 @@ void gs_cubetexture_destroy(gs_texture_t *cubetex)
 
 uint32_t gs_cubetexture_get_size(const gs_texture_t *cubetex)
 {
+	blog(LOG_DEBUG, "Function gs_cubetexture_get_size called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_cubetexture_get_size", cubetex))
@@ -2446,6 +2576,7 @@ uint32_t gs_cubetexture_get_size(const gs_texture_t *cubetex)
 
 enum gs_color_format gs_cubetexture_get_color_format(const gs_texture_t *cubetex)
 {
+	blog(LOG_DEBUG, "Function gs_cubetexture_get_color_format called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_cubetexture_get_color_format", cubetex))
@@ -2456,6 +2587,7 @@ enum gs_color_format gs_cubetexture_get_color_format(const gs_texture_t *cubetex
 
 void gs_voltexture_destroy(gs_texture_t *voltex)
 {
+	blog(LOG_DEBUG, "Function gs_voltexture_destroy called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_voltexture_destroy"))
@@ -2468,6 +2600,7 @@ void gs_voltexture_destroy(gs_texture_t *voltex)
 
 uint32_t gs_voltexture_get_width(const gs_texture_t *voltex)
 {
+	blog(LOG_DEBUG, "Function gs_voltexture_get_width called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_voltexture_get_width", voltex))
@@ -2478,6 +2611,7 @@ uint32_t gs_voltexture_get_width(const gs_texture_t *voltex)
 
 uint32_t gs_voltexture_get_height(const gs_texture_t *voltex)
 {
+	blog(LOG_DEBUG, "Function gs_voltexture_get_height called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_voltexture_get_height", voltex))
@@ -2488,6 +2622,7 @@ uint32_t gs_voltexture_get_height(const gs_texture_t *voltex)
 
 uint32_t gs_voltexture_get_depth(const gs_texture_t *voltex)
 {
+	blog(LOG_DEBUG, "Function gs_voltexture_get_depth called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_voltexture_get_depth", voltex))
@@ -2498,6 +2633,7 @@ uint32_t gs_voltexture_get_depth(const gs_texture_t *voltex)
 
 enum gs_color_format gs_voltexture_get_color_format(const gs_texture_t *voltex)
 {
+	blog(LOG_DEBUG, "Function gs_voltexture_get_color_format called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_voltexture_get_color_format", voltex))
@@ -2508,6 +2644,7 @@ enum gs_color_format gs_voltexture_get_color_format(const gs_texture_t *voltex)
 
 void gs_stagesurface_destroy(gs_stagesurf_t *stagesurf)
 {
+	blog(LOG_DEBUG, "Function gs_stagesurface_destroy called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_stagesurface_destroy"))
@@ -2520,6 +2657,7 @@ void gs_stagesurface_destroy(gs_stagesurf_t *stagesurf)
 
 uint32_t gs_stagesurface_get_width(const gs_stagesurf_t *stagesurf)
 {
+	blog(LOG_DEBUG, "Function gs_stagesurface_get_width called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_stagesurface_get_width", stagesurf))
@@ -2530,6 +2668,7 @@ uint32_t gs_stagesurface_get_width(const gs_stagesurf_t *stagesurf)
 
 uint32_t gs_stagesurface_get_height(const gs_stagesurf_t *stagesurf)
 {
+	blog(LOG_DEBUG, "Function gs_stagesurface_get_height called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_stagesurface_get_height", stagesurf))
@@ -2540,6 +2679,7 @@ uint32_t gs_stagesurface_get_height(const gs_stagesurf_t *stagesurf)
 
 enum gs_color_format gs_stagesurface_get_color_format(const gs_stagesurf_t *stagesurf)
 {
+	blog(LOG_DEBUG, "Function gs_stagesurface_get_color_format called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_stagesurface_get_color_format", stagesurf))
@@ -2550,6 +2690,7 @@ enum gs_color_format gs_stagesurface_get_color_format(const gs_stagesurf_t *stag
 
 bool gs_stagesurface_map(gs_stagesurf_t *stagesurf, uint8_t **data, uint32_t *linesize)
 {
+	blog(LOG_DEBUG, "Function gs_stagesurface_map called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p3("gs_stagesurface_map", stagesurf, data, linesize))
@@ -2560,6 +2701,7 @@ bool gs_stagesurface_map(gs_stagesurf_t *stagesurf, uint8_t **data, uint32_t *li
 
 void gs_stagesurface_unmap(gs_stagesurf_t *stagesurf)
 {
+	blog(LOG_DEBUG, "Function gs_stagesurface_unmap called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_stagesurface_unmap", stagesurf))
@@ -2570,6 +2712,7 @@ void gs_stagesurface_unmap(gs_stagesurf_t *stagesurf)
 
 void gs_zstencil_destroy(gs_zstencil_t *zstencil)
 {
+	blog(LOG_DEBUG, "Function gs_zstencil_destroy called");
 	if (!gs_valid("gs_zstencil_destroy"))
 		return;
 	if (!zstencil)
@@ -2580,6 +2723,7 @@ void gs_zstencil_destroy(gs_zstencil_t *zstencil)
 
 void gs_samplerstate_destroy(gs_samplerstate_t *samplerstate)
 {
+	blog(LOG_DEBUG, "Function gs_samplerstate_destroy called");
 	if (!gs_valid("gs_samplerstate_destroy"))
 		return;
 	if (!samplerstate)
@@ -2590,6 +2734,7 @@ void gs_samplerstate_destroy(gs_samplerstate_t *samplerstate)
 
 void gs_vertexbuffer_destroy(gs_vertbuffer_t *vertbuffer)
 {
+	blog(LOG_DEBUG, "Function gs_vertexbuffer_destroy called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_vertexbuffer_destroy"))
@@ -2602,6 +2747,7 @@ void gs_vertexbuffer_destroy(gs_vertbuffer_t *vertbuffer)
 
 void gs_vertexbuffer_flush(gs_vertbuffer_t *vertbuffer)
 {
+	blog(LOG_DEBUG, "Function gs_vertexbuffer_flush called");
 	if (!gs_valid_p("gs_vertexbuffer_flush", vertbuffer))
 		return;
 
@@ -2610,6 +2756,7 @@ void gs_vertexbuffer_flush(gs_vertbuffer_t *vertbuffer)
 
 void gs_vertexbuffer_flush_direct(gs_vertbuffer_t *vertbuffer, const struct gs_vb_data *data)
 {
+	blog(LOG_DEBUG, "Function gs_vertexbuffer_flush_direct called");
 	if (!gs_valid_p2("gs_vertexbuffer_flush_direct", vertbuffer, data))
 		return;
 
@@ -2626,6 +2773,7 @@ struct gs_vb_data *gs_vertexbuffer_get_data(const gs_vertbuffer_t *vertbuffer)
 
 void gs_indexbuffer_destroy(gs_indexbuffer_t *indexbuffer)
 {
+	blog(LOG_DEBUG, "Function gs_indexbuffer_destroy called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_indexbuffer_destroy"))
@@ -2638,6 +2786,7 @@ void gs_indexbuffer_destroy(gs_indexbuffer_t *indexbuffer)
 
 void gs_indexbuffer_flush(gs_indexbuffer_t *indexbuffer)
 {
+	blog(LOG_DEBUG, "Function gs_indexbuffer_flush called");
 	if (!gs_valid_p("gs_indexbuffer_flush", indexbuffer))
 		return;
 
@@ -2646,6 +2795,7 @@ void gs_indexbuffer_flush(gs_indexbuffer_t *indexbuffer)
 
 void gs_indexbuffer_flush_direct(gs_indexbuffer_t *indexbuffer, const void *data)
 {
+	blog(LOG_DEBUG, "Function gs_indexbuffer_flush_direct called");
 	if (!gs_valid_p2("gs_indexbuffer_flush_direct", indexbuffer, data))
 		return;
 
@@ -2662,6 +2812,7 @@ void *gs_indexbuffer_get_data(const gs_indexbuffer_t *indexbuffer)
 
 size_t gs_indexbuffer_get_num_indices(const gs_indexbuffer_t *indexbuffer)
 {
+	blog(LOG_DEBUG, "Function gs_indexbuffer_get_num_indices called");
 	if (!gs_valid_p("gs_indexbuffer_get_num_indices", indexbuffer))
 		return 0;
 
@@ -2670,6 +2821,7 @@ size_t gs_indexbuffer_get_num_indices(const gs_indexbuffer_t *indexbuffer)
 
 enum gs_index_type gs_indexbuffer_get_type(const gs_indexbuffer_t *indexbuffer)
 {
+	blog(LOG_DEBUG, "Function gs_indexbuffer_get_type called");
 	if (!gs_valid_p("gs_indexbuffer_get_type", indexbuffer))
 		return (enum gs_index_type)0;
 
@@ -2678,6 +2830,7 @@ enum gs_index_type gs_indexbuffer_get_type(const gs_indexbuffer_t *indexbuffer)
 
 void gs_timer_destroy(gs_timer_t *timer)
 {
+	blog(LOG_DEBUG, "Function gs_timer_destroy called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_timer_destroy"))
@@ -2690,6 +2843,7 @@ void gs_timer_destroy(gs_timer_t *timer)
 
 void gs_timer_begin(gs_timer_t *timer)
 {
+	blog(LOG_DEBUG, "Function gs_timer_begin called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_timer_begin"))
@@ -2702,6 +2856,7 @@ void gs_timer_begin(gs_timer_t *timer)
 
 void gs_timer_end(gs_timer_t *timer)
 {
+	blog(LOG_DEBUG, "Function gs_timer_end called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_timer_end"))
@@ -2714,6 +2869,7 @@ void gs_timer_end(gs_timer_t *timer)
 
 bool gs_timer_get_data(gs_timer_t *timer, uint64_t *ticks)
 {
+	blog(LOG_DEBUG, "Function gs_timer_get_data called");
 	if (!gs_valid_p2("gs_timer_get_data", timer, ticks))
 		return false;
 
@@ -2722,6 +2878,7 @@ bool gs_timer_get_data(gs_timer_t *timer, uint64_t *ticks)
 
 void gs_timer_range_destroy(gs_timer_range_t *range)
 {
+	blog(LOG_DEBUG, "Function gs_timer_range_destroy called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_timer_range_destroy"))
@@ -2734,6 +2891,7 @@ void gs_timer_range_destroy(gs_timer_range_t *range)
 
 void gs_timer_range_begin(gs_timer_range_t *range)
 {
+	blog(LOG_DEBUG, "Function gs_timer_range_begin called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_timer_range_begin"))
@@ -2746,6 +2904,7 @@ void gs_timer_range_begin(gs_timer_range_t *range)
 
 void gs_timer_range_end(gs_timer_range_t *range)
 {
+	blog(LOG_DEBUG, "Function gs_timer_range_end called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_timer_range_end"))
@@ -2758,6 +2917,7 @@ void gs_timer_range_end(gs_timer_range_t *range)
 
 bool gs_timer_range_get_data(gs_timer_range_t *range, bool *disjoint, uint64_t *frequency)
 {
+	blog(LOG_DEBUG, "Function gs_timer_range_get_data called");
 	if (!gs_valid_p2("gs_timer_range_get_data", disjoint, frequency))
 		return false;
 
@@ -2766,6 +2926,7 @@ bool gs_timer_range_get_data(gs_timer_range_t *range, bool *disjoint, uint64_t *
 
 bool gs_nv12_available(void)
 {
+	blog(LOG_DEBUG, "Function gs_nv12_available called");
 	if (!gs_valid("gs_nv12_available"))
 		return false;
 
@@ -2777,6 +2938,7 @@ bool gs_nv12_available(void)
 
 bool gs_p010_available(void)
 {
+	blog(LOG_DEBUG, "Function gs_p010_available called");
 	if (!gs_valid("gs_p010_available"))
 		return false;
 
@@ -2788,6 +2950,7 @@ bool gs_p010_available(void)
 
 bool gs_is_monitor_hdr(void *monitor)
 {
+	blog(LOG_DEBUG, "Function gs_is_monitor_hdr called");
 	if (!gs_valid("gs_is_monitor_hdr"))
 		return false;
 
@@ -2796,6 +2959,7 @@ bool gs_is_monitor_hdr(void *monitor)
 
 void gs_debug_marker_begin(const float color[4], const char *markername)
 {
+	blog(LOG_DEBUG, "Function gs_debug_marker_begin called");
 	if (!gs_valid("gs_debug_marker_begin"))
 		return;
 
@@ -2807,6 +2971,7 @@ void gs_debug_marker_begin(const float color[4], const char *markername)
 
 void gs_debug_marker_begin_format(const float color[4], const char *format, ...)
 {
+	blog(LOG_DEBUG, "Function gs_debug_marker_begin_format called");
 	if (!gs_valid("gs_debug_marker_begin"))
 		return;
 
@@ -2824,6 +2989,7 @@ void gs_debug_marker_begin_format(const float color[4], const char *format, ...)
 
 void gs_debug_marker_end(void)
 {
+	blog(LOG_DEBUG, "Function gs_debug_marker_end called");
 	if (!gs_valid("gs_debug_marker_end"))
 		return;
 
@@ -2833,6 +2999,7 @@ void gs_debug_marker_end(void)
 bool gs_texture_create_nv12(gs_texture_t **tex_y, gs_texture_t **tex_uv, uint32_t width, uint32_t height,
 			    uint32_t flags)
 {
+	blog(LOG_DEBUG, "Function gs_texture_create_nv12 called");
 	graphics_t *graphics = thread_graphics;
 	bool success = false;
 
@@ -2871,6 +3038,7 @@ bool gs_texture_create_nv12(gs_texture_t **tex_y, gs_texture_t **tex_uv, uint32_
 bool gs_texture_create_p010(gs_texture_t **tex_y, gs_texture_t **tex_uv, uint32_t width, uint32_t height,
 			    uint32_t flags)
 {
+	blog(LOG_DEBUG, "Function gs_texture_create_p010 called");
 	graphics_t *graphics = thread_graphics;
 	bool success = false;
 
@@ -2908,6 +3076,7 @@ bool gs_texture_create_p010(gs_texture_t **tex_y, gs_texture_t **tex_uv, uint32_
 
 uint32_t gs_get_adapter_count(void)
 {
+	blog(LOG_DEBUG, "Function gs_get_adapter_count called");
 	if (!gs_valid("gs_get_adapter_count"))
 		return 0;
 	if (!thread_graphics->exports.gs_get_adapter_count)
@@ -2933,6 +3102,7 @@ gs_texture_t *gs_texture_create_from_iosurface(void *iosurf)
 
 bool gs_texture_rebind_iosurface(gs_texture_t *texture, void *iosurf)
 {
+	blog(LOG_DEBUG, "Function gs_texture_rebind_iosurface called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid_p("gs_texture_rebind_iosurface", texture))
@@ -2945,6 +3115,7 @@ bool gs_texture_rebind_iosurface(gs_texture_t *texture, void *iosurf)
 
 bool gs_shared_texture_available(void)
 {
+	blog(LOG_DEBUG, "Function gs_shared_texture_available called");
 	if (!gs_valid("gs_shared_texture_available"))
 		return false;
 
@@ -2966,6 +3137,7 @@ gs_texture_t *gs_texture_open_shared(uint32_t handle)
 
 bool gs_gdi_texture_available(void)
 {
+	blog(LOG_DEBUG, "Function gs_gdi_texture_available called");
 	if (!gs_valid("gs_gdi_texture_available"))
 		return false;
 
@@ -2974,6 +3146,7 @@ bool gs_gdi_texture_available(void)
 
 bool gs_shared_texture_available(void)
 {
+	blog(LOG_DEBUG, "Function gs_shared_texture_available called");
 	if (!gs_valid("gs_shared_texture_available"))
 		return false;
 
@@ -2982,6 +3155,7 @@ bool gs_shared_texture_available(void)
 
 bool gs_get_duplicator_monitor_info(int monitor_idx, struct gs_monitor_info *monitor_info)
 {
+	blog(LOG_DEBUG, "Function gs_get_duplicator_monitor_info called");
 	if (!gs_valid_p("gs_get_duplicator_monitor_info", monitor_info))
 		return false;
 	if (!thread_graphics->exports.device_get_duplicator_monitor_info)
@@ -2993,6 +3167,7 @@ bool gs_get_duplicator_monitor_info(int monitor_idx, struct gs_monitor_info *mon
 
 int gs_duplicator_get_monitor_index(void *monitor)
 {
+	blog(LOG_DEBUG, "Function gs_duplicator_get_monitor_index called");
 	if (!gs_valid("gs_duplicator_get_monitor_index"))
 		return false;
 	if (!thread_graphics->exports.device_duplicator_get_monitor_index)
@@ -3013,6 +3188,7 @@ gs_duplicator_t *gs_duplicator_create(int monitor_idx)
 
 void gs_duplicator_destroy(gs_duplicator_t *duplicator)
 {
+	blog(LOG_DEBUG, "Function gs_duplicator_destroy called");
 	if (!gs_valid("gs_duplicator_destroy"))
 		return;
 	if (!duplicator)
@@ -3025,6 +3201,7 @@ void gs_duplicator_destroy(gs_duplicator_t *duplicator)
 
 bool gs_duplicator_update_frame(gs_duplicator_t *duplicator)
 {
+	blog(LOG_DEBUG, "Function gs_duplicator_update_frame called");
 	if (!gs_valid_p("gs_duplicator_update_frame", duplicator))
 		return false;
 	if (!thread_graphics->exports.gs_duplicator_update_frame)
@@ -3035,6 +3212,7 @@ bool gs_duplicator_update_frame(gs_duplicator_t *duplicator)
 
 bool gs_can_adapter_fast_clear(void)
 {
+	blog(LOG_DEBUG, "Function gs_can_adapter_fast_clear called");
 	if (!gs_valid("gs_can_adapter_fast_clear"))
 		return false;
 	if (!thread_graphics->exports.device_can_adapter_fast_clear)
@@ -3055,6 +3233,7 @@ gs_texture_t *gs_duplicator_get_texture(gs_duplicator_t *duplicator)
 
 enum gs_color_space gs_duplicator_get_color_space(gs_duplicator_t *duplicator)
 {
+	blog(LOG_DEBUG, "Function gs_duplicator_get_color_space called");
 	if (!gs_valid_p("gs_duplicator_get_color_space", duplicator))
 		return GS_CS_SRGB;
 	if (!thread_graphics->exports.gs_duplicator_get_color_space)
@@ -3065,6 +3244,7 @@ enum gs_color_space gs_duplicator_get_color_space(gs_duplicator_t *duplicator)
 
 float gs_duplicator_get_sdr_white_level(gs_duplicator_t *duplicator)
 {
+	blog(LOG_DEBUG, "Function gs_duplicator_get_sdr_white_level called");
 	if (!gs_valid_p("gs_duplicator_get_sdr_white_level", duplicator))
 		return 80.f;
 	if (!thread_graphics->exports.gs_duplicator_get_sdr_white_level)
@@ -3098,6 +3278,7 @@ void *gs_texture_get_dc(gs_texture_t *gdi_tex)
 
 void gs_texture_release_dc(gs_texture_t *gdi_tex)
 {
+	blog(LOG_DEBUG, "Function gs_texture_release_dc called");
 	if (!gs_valid_p("gs_texture_release_dc", gdi_tex))
 		return;
 
@@ -3129,6 +3310,7 @@ gs_texture_t *gs_texture_open_nt_shared(uint32_t handle)
 
 uint32_t gs_texture_get_shared_handle(gs_texture_t *tex)
 {
+	blog(LOG_DEBUG, "Function gs_texture_get_shared_handle called");
 	graphics_t *graphics = thread_graphics;
 	if (!gs_valid("gs_texture_get_shared_handle"))
 		return GS_INVALID_HANDLE;
@@ -3151,6 +3333,7 @@ gs_texture_t *gs_texture_wrap_obj(void *obj)
 
 int gs_texture_acquire_sync(gs_texture_t *tex, uint64_t key, uint32_t ms)
 {
+	blog(LOG_DEBUG, "Function gs_texture_acquire_sync called");
 	graphics_t *graphics = thread_graphics;
 	if (!gs_valid("gs_texture_acquire_sync"))
 		return -1;
@@ -3162,6 +3345,7 @@ int gs_texture_acquire_sync(gs_texture_t *tex, uint64_t key, uint32_t ms)
 
 int gs_texture_release_sync(gs_texture_t *tex, uint64_t key)
 {
+	blog(LOG_DEBUG, "Function gs_texture_release_sync called");
 	graphics_t *graphics = thread_graphics;
 	if (!gs_valid("gs_texture_release_sync"))
 		return -1;
@@ -3211,6 +3395,7 @@ gs_stagesurf_t *gs_stagesurface_create_p010(uint32_t width, uint32_t height)
 
 void gs_register_loss_callbacks(const struct gs_device_loss *callbacks)
 {
+	blog(LOG_DEBUG, "Function gs_register_loss_callbacks called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_register_loss_callbacks"))
@@ -3222,6 +3407,7 @@ void gs_register_loss_callbacks(const struct gs_device_loss *callbacks)
 
 void gs_unregister_loss_callbacks(void *data)
 {
+	blog(LOG_DEBUG, "Function gs_unregister_loss_callbacks called");
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_unregister_loss_callbacks"))

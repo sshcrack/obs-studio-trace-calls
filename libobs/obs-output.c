@@ -26,6 +26,7 @@
 
 #include <caption/caption.h>
 #include <caption/mpeg.h>
+#include <util/base.h>
 
 #define get_weak(output) ((obs_weak_output_t *)output->context.control)
 

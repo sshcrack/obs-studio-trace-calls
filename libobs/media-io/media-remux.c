@@ -135,6 +135,7 @@ static inline bool init_output(media_remux_job_t job, const char *out_filename)
 
 bool media_remux_job_create(media_remux_job_t *job, const char *in_filename, const char *out_filename)
 {
+	blog(LOG_DEBUG, "Function media_remux_job_create called");
 	if (!job)
 		return false;
 
@@ -220,6 +221,7 @@ static inline int process_packets(media_remux_job_t job, media_remux_progress_ca
 
 bool media_remux_job_process(media_remux_job_t job, media_remux_progress_callback callback, void *data)
 {
+	blog(LOG_DEBUG, "Function media_remux_job_process called");
 	int ret;
 	bool success = false;
 
@@ -252,6 +254,7 @@ bool media_remux_job_process(media_remux_job_t job, media_remux_progress_callbac
 
 void media_remux_job_destroy(media_remux_job_t job)
 {
+	blog(LOG_DEBUG, "Function media_remux_job_destroy called");
 	if (!job)
 		return;
 

@@ -16,6 +16,7 @@
 
 #include "../util/cf-parser.h"
 #include "decl.h"
+#include <util/base.h>
 
 static inline void err_specifier_exists(struct cf_parser *cfp, const char *storage)
 {
@@ -178,6 +179,7 @@ static void print_errors(struct cf_parser *cfp, const char *decl_string)
 
 bool parse_decl_string(struct decl_info *decl, const char *decl_string)
 {
+	blog(LOG_DEBUG, "Function parse_decl_string called");
 	struct cf_parser cfp;
 	struct strref ret_type;
 	struct decl_param ret_param = {0};

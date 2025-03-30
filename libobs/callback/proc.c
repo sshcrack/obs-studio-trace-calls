@@ -19,6 +19,7 @@
 
 #include "decl.h"
 #include "proc.h"
+#include <util/base.h>
 
 struct proc_info {
 	struct decl_info func;
@@ -68,6 +69,7 @@ proc_handler_t *proc_handler_create(void)
 
 void proc_handler_destroy(proc_handler_t *handler)
 {
+	blog(LOG_DEBUG, "Function proc_handler_destroy called");
 	if (!handler)
 		return;
 
@@ -81,6 +83,7 @@ void proc_handler_destroy(proc_handler_t *handler)
 
 void proc_handler_add(proc_handler_t *handler, const char *decl_string, proc_handler_proc_t proc, void *data)
 {
+	blog(LOG_DEBUG, "Function proc_handler_add called");
 	if (!handler)
 		return;
 
@@ -110,6 +113,7 @@ void proc_handler_add(proc_handler_t *handler, const char *decl_string, proc_han
 
 bool proc_handler_call(proc_handler_t *handler, const char *name, calldata_t *params)
 {
+	blog(LOG_DEBUG, "Function proc_handler_call called");
 	if (!handler)
 		return false;
 

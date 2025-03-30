@@ -18,15 +18,18 @@
 #include "vec4.h"
 #include "vec3.h"
 #include "matrix4.h"
+#include <util/base.h>
 
 void vec4_from_vec3(struct vec4 *dst, const struct vec3 *v)
 {
+	blog(LOG_DEBUG, "Function vec4_from_vec3 called");
 	dst->m = v->m;
 	dst->w = 1.0f;
 }
 
 void vec4_transform(struct vec4 *dst, const struct vec4 *v, const struct matrix4 *m)
 {
+	blog(LOG_DEBUG, "Function vec4_transform called");
 	struct vec4 temp;
 	struct matrix4 transpose;
 

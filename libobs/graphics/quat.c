@@ -20,6 +20,7 @@
 #include "matrix3.h"
 #include "matrix4.h"
 #include "axisang.h"
+#include <util/base.h>
 
 static inline void quat_vec3(struct vec3 *v, const struct quat *q)
 {
@@ -29,6 +30,7 @@ static inline void quat_vec3(struct vec3 *v, const struct quat *q)
 
 void quat_mul(struct quat *dst, const struct quat *q1, const struct quat *q2)
 {
+	blog(LOG_DEBUG, "Function quat_mul called");
 	struct vec3 q1axis, q2axis;
 	struct vec3 temp1, temp2;
 
@@ -46,6 +48,7 @@ void quat_mul(struct quat *dst, const struct quat *q1, const struct quat *q2)
 
 void quat_from_axisang(struct quat *dst, const struct axisang *aa)
 {
+	blog(LOG_DEBUG, "Function quat_from_axisang called");
 	float halfa = aa->w * 0.5f;
 	float sine = sinf(halfa);
 
@@ -61,11 +64,13 @@ struct f4x4 {
 
 void quat_from_matrix3(struct quat *dst, const struct matrix3 *m)
 {
+	blog(LOG_DEBUG, "Function quat_from_matrix3 called");
 	quat_from_matrix4(dst, (const struct matrix4 *)m);
 }
 
 void quat_from_matrix4(struct quat *dst, const struct matrix4 *m)
 {
+	blog(LOG_DEBUG, "Function quat_from_matrix4 called");
 	float tr = (m->x.x + m->y.y + m->z.z);
 	float inv_half;
 	float four_d;
@@ -105,6 +110,7 @@ void quat_from_matrix4(struct quat *dst, const struct matrix4 *m)
 
 void quat_get_dir(struct vec3 *dst, const struct quat *q)
 {
+	blog(LOG_DEBUG, "Function quat_get_dir called");
 	struct matrix3 m;
 	matrix3_from_quat(&m, q);
 	vec3_copy(dst, &m.z);
@@ -112,6 +118,7 @@ void quat_get_dir(struct vec3 *dst, const struct quat *q)
 
 void quat_set_look_dir(struct quat *dst, const struct vec3 *dir)
 {
+	blog(LOG_DEBUG, "Function quat_set_look_dir called");
 	struct vec3 new_dir;
 	struct quat xz_rot, yz_rot;
 	bool xz_valid;
@@ -147,6 +154,7 @@ void quat_set_look_dir(struct quat *dst, const struct vec3 *dir)
 
 void quat_log(struct quat *dst, const struct quat *q)
 {
+	blog(LOG_DEBUG, "Function quat_log called");
 	float angle = acosf(q->w);
 	float sine = sinf(angle);
 	float w = q->w;
@@ -162,6 +170,7 @@ void quat_log(struct quat *dst, const struct quat *q)
 
 void quat_exp(struct quat *dst, const struct quat *q)
 {
+	blog(LOG_DEBUG, "Function quat_exp called");
 	float length = sqrtf(q->x * q->x + q->y * q->y + q->z * q->z);
 	float sine = sinf(length);
 
@@ -173,6 +182,7 @@ void quat_exp(struct quat *dst, const struct quat *q)
 
 void quat_interpolate(struct quat *dst, const struct quat *q1, const struct quat *q2, float t)
 {
+	blog(LOG_DEBUG, "Function quat_interpolate called");
 	float dot = quat_dot(q1, q2);
 	float anglef = acosf(dot);
 	float sine, sinei, sinet, sineti;
@@ -196,6 +206,7 @@ void quat_interpolate(struct quat *dst, const struct quat *q1, const struct quat
 
 void quat_get_tangent(struct quat *dst, const struct quat *prev, const struct quat *q, const struct quat *next)
 {
+	blog(LOG_DEBUG, "Function quat_get_tangent called");
 	struct quat temp;
 
 	quat_sub(&temp, q, prev);
@@ -207,6 +218,7 @@ void quat_get_tangent(struct quat *dst, const struct quat *prev, const struct qu
 void quat_interpolate_cubic(struct quat *dst, const struct quat *q1, const struct quat *q2, const struct quat *m1,
 			    const struct quat *m2, float t)
 {
+	blog(LOG_DEBUG, "Function quat_interpolate_cubic called");
 	struct quat temp1, temp2;
 
 	quat_interpolate(&temp1, q1, q2, t);

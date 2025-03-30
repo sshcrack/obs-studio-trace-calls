@@ -17,9 +17,11 @@
 
 #include "../util/platform.h"
 #include "shader-parser.h"
+#include <util/base.h>
 
 enum gs_shader_param_type get_shader_param_type(const char *type)
 {
+	blog(LOG_DEBUG, "Function get_shader_param_type called");
 	if (strcmp(type, "float") == 0)
 		return GS_SHADER_PARAM_FLOAT;
 	else if (strcmp(type, "float2") == 0)
@@ -50,6 +52,7 @@ enum gs_shader_param_type get_shader_param_type(const char *type)
 
 enum gs_sample_filter get_sample_filter(const char *filter)
 {
+	blog(LOG_DEBUG, "Function get_sample_filter called");
 	if (astrcmpi(filter, "Anisotropy") == 0)
 		return GS_FILTER_ANISOTROPIC;
 
@@ -82,6 +85,7 @@ enum gs_sample_filter get_sample_filter(const char *filter)
 
 extern enum gs_address_mode get_address_mode(const char *mode)
 {
+	blog(LOG_DEBUG, "Function get_address_mode called");
 	if (astrcmpi(mode, "Wrap") == 0 || astrcmpi(mode, "Repeat") == 0)
 		return GS_ADDRESS_WRAP;
 	else if (astrcmpi(mode, "Clamp") == 0 || astrcmpi(mode, "None") == 0)
@@ -98,6 +102,7 @@ extern enum gs_address_mode get_address_mode(const char *mode)
 
 void shader_sampler_convert(struct shader_sampler *ss, struct gs_sampler_info *info)
 {
+	blog(LOG_DEBUG, "Function shader_sampler_convert called");
 	size_t i;
 	memset(info, 0, sizeof(struct gs_sampler_info));
 
@@ -690,6 +695,7 @@ error:
 
 bool shader_parse(struct shader_parser *sp, const char *shader, const char *file)
 {
+	blog(LOG_DEBUG, "Function shader_parse called");
 	if (!cf_parser_parse(&sp->cfp, shader, file))
 		return false;
 

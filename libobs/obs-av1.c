@@ -5,6 +5,7 @@
 #include "obs-av1.h"
 
 #include "obs.h"
+#include <util/base.h>
 
 static inline uint64_t leb128(const uint8_t *buf, size_t size, size_t *len)
 {
@@ -83,6 +84,7 @@ static inline void encode_uleb128(uint64_t val, uint8_t *out_buf, size_t *len_ou
 void metadata_obu_itu_t35(const uint8_t *itut_t35_buffer, size_t itut_bufsize, uint8_t **out_buffer,
 			  size_t *outbuf_size)
 {
+	blog(LOG_DEBUG, "Function metadata_obu_itu_t35 called");
 	metadata_obu(itut_t35_buffer, itut_bufsize, out_buffer, outbuf_size, METADATA_TYPE_ITUT_T35);
 }
 
@@ -90,6 +92,7 @@ void metadata_obu_itu_t35(const uint8_t *itut_t35_buffer, size_t itut_bufsize, u
 void metadata_obu(const uint8_t *source_buffer, size_t source_bufsize, uint8_t **out_buffer, size_t *outbuf_size,
 		  uint8_t metadata_type)
 {
+	blog(LOG_DEBUG, "Function metadata_obu called");
 	/* From the AV1 spec: 5.3.2 OBU Header Syntax
 	 * -------------
 	 * obu_forbidden_bit   (1)
@@ -156,6 +159,7 @@ void metadata_obu(const uint8_t *source_buffer, size_t source_bufsize, uint8_t *
 
 bool obs_av1_keyframe(const uint8_t *data, size_t size)
 {
+	blog(LOG_DEBUG, "Function obs_av1_keyframe called");
 	const uint8_t *start = data, *end = data + size;
 
 	while (start < end) {
@@ -181,6 +185,7 @@ bool obs_av1_keyframe(const uint8_t *data, size_t size)
 void obs_extract_av1_headers(const uint8_t *packet, size_t size, uint8_t **new_packet_data, size_t *new_packet_size,
 			     uint8_t **header_data, size_t *header_size)
 {
+	blog(LOG_DEBUG, "Function obs_extract_av1_headers called");
 	DARRAY(uint8_t) new_packet;
 	DARRAY(uint8_t) header;
 	const uint8_t *start = packet, *end = packet + size;

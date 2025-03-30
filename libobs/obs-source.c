@@ -30,6 +30,7 @@
 
 #include "obs.h"
 #include "obs-internal.h"
+#include <util/base.h>
 
 #define get_weak(source) ((obs_weak_source_t *)source->context.control)
 

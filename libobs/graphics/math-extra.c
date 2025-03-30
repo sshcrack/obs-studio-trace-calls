@@ -20,9 +20,11 @@
 #include "vec3.h"
 #include "math-defs.h"
 #include "math-extra.h"
+#include <util/base.h>
 
 void polar_to_cart(struct vec3 *dst, const struct vec3 *v)
 {
+	blog(LOG_DEBUG, "Function polar_to_cart called");
 	struct vec3 cart;
 	float sinx = cosf(v->x);
 	float sinx_z = v->z * sinx;
@@ -36,6 +38,7 @@ void polar_to_cart(struct vec3 *dst, const struct vec3 *v)
 
 void cart_to_polar(struct vec3 *dst, const struct vec3 *v)
 {
+	blog(LOG_DEBUG, "Function cart_to_polar called");
 	struct vec3 polar;
 	polar.z = vec3_len(v);
 
@@ -51,12 +54,14 @@ void cart_to_polar(struct vec3 *dst, const struct vec3 *v)
 
 void norm_to_polar(struct vec2 *dst, const struct vec3 *norm)
 {
+	blog(LOG_DEBUG, "Function norm_to_polar called");
 	dst->x = atan2f(norm->x, norm->z);
 	dst->y = asinf(norm->y);
 }
 
 void polar_to_norm(struct vec3 *dst, const struct vec2 *polar)
 {
+	blog(LOG_DEBUG, "Function polar_to_norm called");
 	float sinx = sinf(polar->x);
 
 	dst->x = sinx * cosf(polar->y);
@@ -66,6 +71,7 @@ void polar_to_norm(struct vec3 *dst, const struct vec2 *polar)
 
 float calc_torquef(float val1, float val2, float torque, float min_adjust, float t)
 {
+	blog(LOG_DEBUG, "Function calc_torquef called");
 	float out = val1;
 	float dist;
 	bool over;
@@ -96,6 +102,7 @@ float calc_torquef(float val1, float val2, float torque, float min_adjust, float
 void calc_torque(struct vec3 *dst, const struct vec3 *v1, const struct vec3 *v2, float torque, float min_adjust,
 		 float t)
 {
+	blog(LOG_DEBUG, "Function calc_torque called");
 	struct vec3 line, dir;
 	float orig_dist, torque_dist, adjust_dist;
 
@@ -124,6 +131,7 @@ void calc_torque(struct vec3 *dst, const struct vec3 *v1, const struct vec3 *v2,
 
 float rand_float(int positive_only)
 {
+	blog(LOG_DEBUG, "Function rand_float called");
 	if (positive_only)
 		return (float)((double)rand() / (double)RAND_MAX);
 	else

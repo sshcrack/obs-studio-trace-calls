@@ -1,10 +1,14 @@
+#include <util/base.h>
+
 extern "C" EXPORT void winrt_initialize()
 {
+	blog(LOG_DEBUG, "Function winrt_initialize called");
 	winrt::init_apartment(winrt::apartment_type::multi_threaded);
 }
 
 extern "C" EXPORT void winrt_uninitialize()
 {
+	blog(LOG_DEBUG, "Function winrt_uninitialize called");
 	winrt::uninit_apartment();
 }
 

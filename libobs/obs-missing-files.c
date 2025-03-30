@@ -19,6 +19,7 @@
 #include "util/dstr.h"
 #include "obs-missing-files.h"
 #include "obs.h"
+#include <util/base.h>
 
 struct obs_missing_file {
 	volatile long ref;
@@ -43,6 +44,7 @@ obs_missing_files_t *obs_missing_files_create()
 
 void obs_missing_files_destroy(obs_missing_files_t *files)
 {
+	blog(LOG_DEBUG, "Function obs_missing_files_destroy called");
 	for (size_t i = 0; i < files->files.num; i++) {
 		obs_missing_file_release(files->files.array[i]);
 	}
@@ -53,11 +55,13 @@ void obs_missing_files_destroy(obs_missing_files_t *files)
 
 void obs_missing_files_add_file(obs_missing_files_t *files, obs_missing_file_t *file)
 {
+	blog(LOG_DEBUG, "Function obs_missing_files_add_file called");
 	da_insert(files->files, files->files.num, &file);
 }
 
 size_t obs_missing_files_count(obs_missing_files_t *files)
 {
+	blog(LOG_DEBUG, "Function obs_missing_files_count called");
 	return files->files.num;
 }
 
@@ -68,6 +72,7 @@ obs_missing_file_t *obs_missing_files_get_file(obs_missing_files_t *files, int i
 
 void obs_missing_files_append(obs_missing_files_t *dst, obs_missing_files_t *src)
 {
+	blog(LOG_DEBUG, "Function obs_missing_files_append called");
 	for (size_t i = 0; i < src->files.num; i++) {
 		obs_missing_file_t *file = src->files.array[i];
 		obs_missing_files_add_file(dst, file);
@@ -100,6 +105,7 @@ obs_missing_file_t *obs_missing_file_create(const char *path, obs_missing_file_c
 
 void obs_missing_file_release(obs_missing_file_t *file)
 {
+	blog(LOG_DEBUG, "Function obs_missing_file_release called");
 	if (!file)
 		return;
 
@@ -109,6 +115,7 @@ void obs_missing_file_release(obs_missing_file_t *file)
 
 void obs_missing_file_destroy(obs_missing_file_t *file)
 {
+	blog(LOG_DEBUG, "Function obs_missing_file_destroy called");
 	switch (file->src_type) {
 	case OBS_MISSING_FILE_SOURCE:
 		bfree(file->src_name);
@@ -122,6 +129,7 @@ void obs_missing_file_destroy(obs_missing_file_t *file)
 
 void obs_missing_file_issue_callback(obs_missing_file_t *file, const char *new_path)
 {
+	blog(LOG_DEBUG, "Function obs_missing_file_issue_callback called");
 	switch (file->src_type) {
 	case OBS_MISSING_FILE_SOURCE:
 		obs_source_replace_missing_file(file->callback, (obs_source_t *)file->src, new_path, file->data);

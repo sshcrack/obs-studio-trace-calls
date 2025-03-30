@@ -20,9 +20,11 @@
 #include "obs.h"
 #include "obs-nal.h"
 #include "util/array-serializer.h"
+#include <util/base.h>
 
 bool obs_hevc_keyframe(const uint8_t *data, size_t size)
 {
+	blog(LOG_DEBUG, "Function obs_hevc_keyframe called");
 	const uint8_t *nal_start, *nal_end;
 	const uint8_t *end = data + size;
 
@@ -90,6 +92,7 @@ static void serialize_hevc_data(struct serializer *s, const uint8_t *data, size_
 
 void obs_parse_hevc_packet(struct encoder_packet *hevc_packet, const struct encoder_packet *src)
 {
+	blog(LOG_DEBUG, "Function obs_parse_hevc_packet called");
 	struct array_output_data output;
 	struct serializer s;
 	long ref = 1;
@@ -107,6 +110,7 @@ void obs_parse_hevc_packet(struct encoder_packet *hevc_packet, const struct enco
 
 int obs_parse_hevc_packet_priority(const struct encoder_packet *packet)
 {
+	blog(LOG_DEBUG, "Function obs_parse_hevc_packet_priority called");
 	int priority = packet->priority;
 
 	const uint8_t *const data = packet->data;
@@ -131,6 +135,7 @@ int obs_parse_hevc_packet_priority(const struct encoder_packet *packet)
 void obs_extract_hevc_headers(const uint8_t *packet, size_t size, uint8_t **new_packet_data, size_t *new_packet_size,
 			      uint8_t **header_data, size_t *header_size, uint8_t **sei_data, size_t *sei_size)
 {
+	blog(LOG_DEBUG, "Function obs_extract_hevc_headers called");
 	DARRAY(uint8_t) new_packet;
 	DARRAY(uint8_t) header;
 	DARRAY(uint8_t) sei;

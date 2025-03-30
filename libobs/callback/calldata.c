@@ -159,6 +159,7 @@ static inline bool cd_ensure_capacity(calldata_t *data, uint8_t **pos, size_t ne
 
 bool calldata_get_data(const calldata_t *data, const char *name, void *out, size_t size)
 {
+	blog(LOG_DEBUG, "Function calldata_get_data called");
 	uint8_t *pos;
 	size_t data_size;
 
@@ -178,6 +179,7 @@ bool calldata_get_data(const calldata_t *data, const char *name, void *out, size
 
 void calldata_set_data(calldata_t *data, const char *name, const void *in, size_t size)
 {
+	blog(LOG_DEBUG, "Function calldata_set_data called");
 	uint8_t *pos = NULL;
 
 	if (!data || !name || !*name)
@@ -226,6 +228,7 @@ void calldata_set_data(calldata_t *data, const char *name, const void *in, size_
 
 bool calldata_get_string(const calldata_t *data, const char *name, const char **str)
 {
+	blog(LOG_DEBUG, "Function calldata_get_string called");
 	uint8_t *pos;
 	if (!data || !name || !*name)
 		return false;

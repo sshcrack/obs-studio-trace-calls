@@ -16,6 +16,7 @@
 ******************************************************************************/
 
 #include "obs-internal.h"
+#include <util/base.h>
 
 #define get_weak(service) ((obs_weak_service_t *)service->context.control)
 

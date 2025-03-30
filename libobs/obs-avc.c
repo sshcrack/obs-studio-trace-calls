@@ -21,9 +21,11 @@
 #include "obs-nal.h"
 #include "util/array-serializer.h"
 #include "util/bitstream.h"
+#include <util/base.h>
 
 bool obs_avc_keyframe(const uint8_t *data, size_t size)
 {
+	blog(LOG_DEBUG, "Function obs_avc_keyframe called");
 	const uint8_t *nal_start, *nal_end;
 	const uint8_t *end = data + size;
 
@@ -88,6 +90,7 @@ static void serialize_avc_data(struct serializer *s, const uint8_t *data, size_t
 
 void obs_parse_avc_packet(struct encoder_packet *avc_packet, const struct encoder_packet *src)
 {
+	blog(LOG_DEBUG, "Function obs_parse_avc_packet called");
 	struct array_output_data output;
 	struct serializer s;
 	long ref = 1;
@@ -105,6 +108,7 @@ void obs_parse_avc_packet(struct encoder_packet *avc_packet, const struct encode
 
 int obs_parse_avc_packet_priority(const struct encoder_packet *packet)
 {
+	blog(LOG_DEBUG, "Function obs_parse_avc_packet_priority called");
 	int priority = packet->priority;
 
 	const uint8_t *const data = packet->data;
@@ -218,6 +222,7 @@ static void get_sps_high_params(const uint8_t *sps, size_t size, uint8_t *chroma
 
 size_t obs_parse_avc_header(uint8_t **header, const uint8_t *data, size_t size)
 {
+	blog(LOG_DEBUG, "Function obs_parse_avc_header called");
 	struct array_output_data output;
 	struct serializer s;
 	const uint8_t *sps = NULL, *pps = NULL;
@@ -273,6 +278,7 @@ size_t obs_parse_avc_header(uint8_t **header, const uint8_t *data, size_t size)
 void obs_extract_avc_headers(const uint8_t *packet, size_t size, uint8_t **new_packet_data, size_t *new_packet_size,
 			     uint8_t **header_data, size_t *header_size, uint8_t **sei_data, size_t *sei_size)
 {
+	blog(LOG_DEBUG, "Function obs_extract_avc_headers called");
 	DARRAY(uint8_t) new_packet;
 	DARRAY(uint8_t) header;
 	DARRAY(uint8_t) sei;

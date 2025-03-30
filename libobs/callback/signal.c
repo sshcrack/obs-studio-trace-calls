@@ -19,6 +19,7 @@
 
 #include "decl.h"
 #include "signal.h"
+#include <util/base.h>
 
 struct signal_callback {
 	signal_callback_t callback;
@@ -152,6 +153,7 @@ static void signal_handler_actually_destroy(signal_handler_t *handler)
 
 void signal_handler_destroy(signal_handler_t *handler)
 {
+	blog(LOG_DEBUG, "Function signal_handler_destroy called");
 	if (handler && os_atomic_dec_long(&handler->refs) == 0) {
 		signal_handler_actually_destroy(handler);
 	}
@@ -159,6 +161,7 @@ void signal_handler_destroy(signal_handler_t *handler)
 
 bool signal_handler_add(signal_handler_t *handler, const char *signal_decl)
 {
+	blog(LOG_DEBUG, "Function signal_handler_add called");
 	struct decl_info func = {0};
 	struct signal_info *sig, *last;
 	bool success = true;
@@ -226,11 +229,13 @@ static void signal_handler_connect_internal(signal_handler_t *handler, const cha
 
 void signal_handler_connect(signal_handler_t *handler, const char *signal, signal_callback_t callback, void *data)
 {
+	blog(LOG_DEBUG, "Function signal_handler_connect called");
 	signal_handler_connect_internal(handler, signal, callback, data, false);
 }
 
 void signal_handler_connect_ref(signal_handler_t *handler, const char *signal, signal_callback_t callback, void *data)
 {
+	blog(LOG_DEBUG, "Function signal_handler_connect_ref called");
 	signal_handler_connect_internal(handler, signal, callback, data, true);
 }
 
@@ -250,6 +255,7 @@ static inline struct signal_info *getsignal_locked(signal_handler_t *handler, co
 
 void signal_handler_disconnect(signal_handler_t *handler, const char *signal, signal_callback_t callback, void *data)
 {
+	blog(LOG_DEBUG, "Function signal_handler_disconnect called");
 	struct signal_info *sig = getsignal_locked(handler, signal);
 	bool keep_ref = false;
 	size_t idx;
@@ -281,6 +287,7 @@ static THREAD_LOCAL struct global_callback_info *current_global_cb = NULL;
 
 void signal_handler_remove_current(void)
 {
+	blog(LOG_DEBUG, "Function signal_handler_remove_current called");
 	if (current_signal_cb)
 		current_signal_cb->remove = true;
 	else if (current_global_cb)
@@ -289,6 +296,7 @@ void signal_handler_remove_current(void)
 
 void signal_handler_signal(signal_handler_t *handler, const char *signal, calldata_t *params)
 {
+	blog(LOG_DEBUG, "Function signal_handler_signal called");
 	struct signal_info *sig = getsignal_locked(handler, signal);
 	long remove_refs = 0;
 
@@ -352,6 +360,7 @@ void signal_handler_signal(signal_handler_t *handler, const char *signal, callda
 
 void signal_handler_connect_global(signal_handler_t *handler, global_signal_callback_t callback, void *data)
 {
+	blog(LOG_DEBUG, "Function signal_handler_connect_global called");
 	struct global_callback_info cb_data = {callback, data, 0, false};
 	size_t idx;
 
@@ -369,6 +378,7 @@ void signal_handler_connect_global(signal_handler_t *handler, global_signal_call
 
 void signal_handler_disconnect_global(signal_handler_t *handler, global_signal_callback_t callback, void *data)
 {
+	blog(LOG_DEBUG, "Function signal_handler_disconnect_global called");
 	struct global_callback_info cb_data = {callback, data, 0, false};
 	size_t idx;
 

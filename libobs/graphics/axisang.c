@@ -17,9 +17,11 @@
 
 #include "axisang.h"
 #include "quat.h"
+#include <util/base.h>
 
 void axisang_from_quat(struct axisang *dst, const struct quat *q)
 {
+	blog(LOG_DEBUG, "Function axisang_from_quat called");
 	float len, leni;
 
 	len = q->x * q->x + q->y * q->y + q->z * q->z;

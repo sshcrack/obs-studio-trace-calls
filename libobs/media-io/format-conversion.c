@@ -18,6 +18,7 @@
 #include "format-conversion.h"
 
 #include "../util/sse-intrin.h"
+#include <util/base.h>
 
 /* ...surprisingly, if I don't use a macro to force inlining, it causes the
  * CPU usage to boost by a tremendous amount in debug builds. */
@@ -80,6 +81,7 @@ static FORCE_INLINE uint32_t min_uint32(uint32_t a, uint32_t b)
 void compress_uyvx_to_i420(const uint8_t *input, uint32_t in_linesize, uint32_t start_y, uint32_t end_y,
 			   uint8_t *output[], const uint32_t out_linesize[])
 {
+	blog(LOG_DEBUG, "Function compress_uyvx_to_i420 called");
 	uint8_t *lum_plane = output[0];
 	uint8_t *u_plane = output[1];
 	uint8_t *v_plane = output[2];
@@ -112,6 +114,7 @@ void compress_uyvx_to_i420(const uint8_t *input, uint32_t in_linesize, uint32_t 
 void compress_uyvx_to_nv12(const uint8_t *input, uint32_t in_linesize, uint32_t start_y, uint32_t end_y,
 			   uint8_t *output[], const uint32_t out_linesize[])
 {
+	blog(LOG_DEBUG, "Function compress_uyvx_to_nv12 called");
 	uint8_t *lum_plane = output[0];
 	uint8_t *chroma_plane = output[1];
 	uint32_t width = min_uint32(in_linesize, out_linesize[0]);
@@ -143,6 +146,7 @@ void compress_uyvx_to_nv12(const uint8_t *input, uint32_t in_linesize, uint32_t 
 void convert_uyvx_to_i444(const uint8_t *input, uint32_t in_linesize, uint32_t start_y, uint32_t end_y,
 			  uint8_t *output[], const uint32_t out_linesize[])
 {
+	blog(LOG_DEBUG, "Function convert_uyvx_to_i444 called");
 	uint8_t *lum_plane = output[0];
 	uint8_t *u_plane = output[1];
 	uint8_t *v_plane = output[2];
@@ -176,6 +180,7 @@ void convert_uyvx_to_i444(const uint8_t *input, uint32_t in_linesize, uint32_t s
 void decompress_420(const uint8_t *const input[], const uint32_t in_linesize[], uint32_t start_y, uint32_t end_y,
 		    uint8_t *output, uint32_t out_linesize)
 {
+	blog(LOG_DEBUG, "Function decompress_420 called");
 	uint32_t start_y_d2 = start_y / 2;
 	uint32_t width_d2 = in_linesize[0] / 2;
 	uint32_t height_d2 = end_y / 2;
@@ -209,6 +214,7 @@ void decompress_420(const uint8_t *const input[], const uint32_t in_linesize[], 
 void decompress_nv12(const uint8_t *const input[], const uint32_t in_linesize[], uint32_t start_y, uint32_t end_y,
 		     uint8_t *output, uint32_t out_linesize)
 {
+	blog(LOG_DEBUG, "Function decompress_nv12 called");
 	uint32_t start_y_d2 = start_y / 2;
 	uint32_t width_d2 = min_uint32(in_linesize[0], out_linesize) / 2;
 	uint32_t height_d2 = end_y / 2;
@@ -241,6 +247,7 @@ void decompress_nv12(const uint8_t *const input[], const uint32_t in_linesize[],
 void decompress_422(const uint8_t *input, uint32_t in_linesize, uint32_t start_y, uint32_t end_y, uint8_t *output,
 		    uint32_t out_linesize, bool leading_lum)
 {
+	blog(LOG_DEBUG, "Function decompress_422 called");
 	uint32_t width_d2 = min_uint32(in_linesize, out_linesize) / 2;
 	uint32_t y;
 

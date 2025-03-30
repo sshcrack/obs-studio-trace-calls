@@ -18,6 +18,7 @@
 #include <inttypes.h>
 
 #include "obs-internal.h"
+#include <util/base.h>
 
 /* Since ids are just sequential size_t integers, we don't really need a
  * hash function to get an even distribution across buckets.
@@ -45,6 +46,7 @@ static inline void unlock(void)
 
 obs_hotkey_id obs_hotkey_get_id(const obs_hotkey_t *key)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_get_id called");
 	return key->id;
 }
 
@@ -60,6 +62,7 @@ const char *obs_hotkey_get_description(const obs_hotkey_t *key)
 
 obs_hotkey_registerer_t obs_hotkey_get_registerer_type(const obs_hotkey_t *key)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_get_registerer_type called");
 	return key->registerer_type;
 }
 
@@ -70,16 +73,19 @@ void *obs_hotkey_get_registerer(const obs_hotkey_t *key)
 
 obs_hotkey_id obs_hotkey_get_pair_partner_id(const obs_hotkey_t *key)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_get_pair_partner_id called");
 	return key->pair_partner_id;
 }
 
 obs_key_combination_t obs_hotkey_binding_get_key_combination(obs_hotkey_binding_t *binding)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_binding_get_key_combination called");
 	return binding->key;
 }
 
 obs_hotkey_id obs_hotkey_binding_get_hotkey_id(obs_hotkey_binding_t *binding)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_binding_get_hotkey_id called");
 	return binding->hotkey_id;
 }
 
@@ -90,6 +96,7 @@ obs_hotkey_t *obs_hotkey_binding_get_hotkey(obs_hotkey_binding_t *binding)
 
 void obs_hotkey_set_name(obs_hotkey_id id, const char *name)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_set_name called");
 	obs_hotkey_t *hotkey;
 	HASH_FIND_HKEY(obs->hotkeys.hotkeys, id, hotkey);
 	if (!hotkey)
@@ -101,6 +108,7 @@ void obs_hotkey_set_name(obs_hotkey_id id, const char *name)
 
 void obs_hotkey_set_description(obs_hotkey_id id, const char *desc)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_set_description called");
 	obs_hotkey_t *hotkey;
 	HASH_FIND_HKEY(obs->hotkeys.hotkeys, id, hotkey);
 	if (!hotkey)
@@ -112,6 +120,7 @@ void obs_hotkey_set_description(obs_hotkey_id id, const char *desc)
 
 void obs_hotkey_pair_set_names(obs_hotkey_pair_id id, const char *name0, const char *name1)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_pair_set_names called");
 	obs_hotkey_pair_t *pair;
 
 	HASH_FIND_HKEY(obs->hotkeys.hotkey_pairs, id, pair);
@@ -124,6 +133,7 @@ void obs_hotkey_pair_set_names(obs_hotkey_pair_id id, const char *name0, const c
 
 void obs_hotkey_pair_set_descriptions(obs_hotkey_pair_id id, const char *desc0, const char *desc1)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_pair_set_descriptions called");
 	obs_hotkey_pair_t *pair;
 
 	HASH_FIND_HKEY(obs->hotkeys.hotkey_pairs, id, pair);
@@ -188,6 +198,7 @@ static inline obs_hotkey_id obs_hotkey_register_internal(obs_hotkey_registerer_t
 
 obs_hotkey_id obs_hotkey_register_frontend(const char *name, const char *description, obs_hotkey_func func, void *data)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_register_frontend called");
 	if (!lock())
 		return OBS_INVALID_HOTKEY_ID;
 
@@ -201,6 +212,7 @@ obs_hotkey_id obs_hotkey_register_frontend(const char *name, const char *descrip
 obs_hotkey_id obs_hotkey_register_encoder(obs_encoder_t *encoder, const char *name, const char *description,
 					  obs_hotkey_func func, void *data)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_register_encoder called");
 	if (!encoder || !lock())
 		return OBS_INVALID_HOTKEY_ID;
 
@@ -215,6 +227,7 @@ obs_hotkey_id obs_hotkey_register_encoder(obs_encoder_t *encoder, const char *na
 obs_hotkey_id obs_hotkey_register_output(obs_output_t *output, const char *name, const char *description,
 					 obs_hotkey_func func, void *data)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_register_output called");
 	if (!output || !lock())
 		return OBS_INVALID_HOTKEY_ID;
 
@@ -229,6 +242,7 @@ obs_hotkey_id obs_hotkey_register_output(obs_output_t *output, const char *name,
 obs_hotkey_id obs_hotkey_register_service(obs_service_t *service, const char *name, const char *description,
 					  obs_hotkey_func func, void *data)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_register_service called");
 	if (!service || !lock())
 		return OBS_INVALID_HOTKEY_ID;
 
@@ -243,6 +257,7 @@ obs_hotkey_id obs_hotkey_register_service(obs_service_t *service, const char *na
 obs_hotkey_id obs_hotkey_register_source(obs_source_t *source, const char *name, const char *description,
 					 obs_hotkey_func func, void *data)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_register_source called");
 	if (!source || source->context.private || !lock())
 		return OBS_INVALID_HOTKEY_ID;
 
@@ -349,6 +364,7 @@ obs_hotkey_pair_id obs_hotkey_pair_register_frontend(const char *name0, const ch
 						     const char *description1, obs_hotkey_active_func func0,
 						     obs_hotkey_active_func func1, void *data0, void *data1)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_pair_register_frontend called");
 	return register_hotkey_pair_internal(OBS_HOTKEY_REGISTERER_FRONTEND, NULL, obs_id_, NULL, name0, description0,
 					     name1, description1, func0, func1, data0, data1);
 }
@@ -363,6 +379,7 @@ obs_hotkey_pair_id obs_hotkey_pair_register_encoder(obs_encoder_t *encoder, cons
 						    obs_hotkey_active_func func0, obs_hotkey_active_func func1,
 						    void *data0, void *data1)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_pair_register_encoder called");
 	if (!encoder)
 		return OBS_INVALID_HOTKEY_PAIR_ID;
 	return register_hotkey_pair_internal(OBS_HOTKEY_REGISTERER_ENCODER, encoder, weak_encoder_ref,
@@ -380,6 +397,7 @@ obs_hotkey_pair_id obs_hotkey_pair_register_output(obs_output_t *output, const c
 						   obs_hotkey_active_func func0, obs_hotkey_active_func func1,
 						   void *data0, void *data1)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_pair_register_output called");
 	if (!output)
 		return OBS_INVALID_HOTKEY_PAIR_ID;
 	return register_hotkey_pair_internal(OBS_HOTKEY_REGISTERER_OUTPUT, output, weak_output_ref, &output->context,
@@ -396,6 +414,7 @@ obs_hotkey_pair_id obs_hotkey_pair_register_service(obs_service_t *service, cons
 						    obs_hotkey_active_func func0, obs_hotkey_active_func func1,
 						    void *data0, void *data1)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_pair_register_service called");
 	if (!service)
 		return OBS_INVALID_HOTKEY_PAIR_ID;
 	return register_hotkey_pair_internal(OBS_HOTKEY_REGISTERER_SERVICE, service, weak_service_ref,
@@ -413,6 +432,7 @@ obs_hotkey_pair_id obs_hotkey_pair_register_source(obs_source_t *source, const c
 						   obs_hotkey_active_func func0, obs_hotkey_active_func func1,
 						   void *data0, void *data1)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_pair_register_source called");
 	if (!source)
 		return OBS_INVALID_HOTKEY_PAIR_ID;
 	return register_hotkey_pair_internal(OBS_HOTKEY_REGISTERER_SOURCE, source, weak_source_ref, &source->context,
@@ -502,6 +522,7 @@ static inline bool remove_bindings(obs_hotkey_id id);
 
 void obs_hotkey_load_bindings(obs_hotkey_id id, obs_key_combination_t *combinations, size_t num)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_load_bindings called");
 	if (!lock())
 		return;
 
@@ -521,6 +542,7 @@ void obs_hotkey_load_bindings(obs_hotkey_id id, obs_key_combination_t *combinati
 
 void obs_hotkey_load(obs_hotkey_id id, obs_data_array_t *data)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_load called");
 	if (!lock())
 		return;
 
@@ -546,6 +568,7 @@ static inline bool enum_load_bindings(void *data, obs_hotkey_t *hotkey)
 
 void obs_hotkeys_load_encoder(obs_encoder_t *encoder, obs_data_t *hotkeys)
 {
+	blog(LOG_DEBUG, "Function obs_hotkeys_load_encoder called");
 	if (!encoder || !hotkeys)
 		return;
 	if (!lock())
@@ -557,6 +580,7 @@ void obs_hotkeys_load_encoder(obs_encoder_t *encoder, obs_data_t *hotkeys)
 
 void obs_hotkeys_load_output(obs_output_t *output, obs_data_t *hotkeys)
 {
+	blog(LOG_DEBUG, "Function obs_hotkeys_load_output called");
 	if (!output || !hotkeys)
 		return;
 	if (!lock())
@@ -568,6 +592,7 @@ void obs_hotkeys_load_output(obs_output_t *output, obs_data_t *hotkeys)
 
 void obs_hotkeys_load_service(obs_service_t *service, obs_data_t *hotkeys)
 {
+	blog(LOG_DEBUG, "Function obs_hotkeys_load_service called");
 	if (!service || !hotkeys)
 		return;
 	if (!lock())
@@ -579,6 +604,7 @@ void obs_hotkeys_load_service(obs_service_t *service, obs_data_t *hotkeys)
 
 void obs_hotkeys_load_source(obs_source_t *source, obs_data_t *hotkeys)
 {
+	blog(LOG_DEBUG, "Function obs_hotkeys_load_source called");
 	if (!source || !hotkeys)
 		return;
 	if (!lock())
@@ -590,6 +616,7 @@ void obs_hotkeys_load_source(obs_source_t *source, obs_data_t *hotkeys)
 
 void obs_hotkey_pair_load(obs_hotkey_pair_id id, obs_data_array_t *data0, obs_data_array_t *data1)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_pair_load called");
 	if ((!data0 && !data1) || !lock())
 		return;
 
@@ -680,6 +707,7 @@ obs_data_array_t *obs_hotkey_save(obs_hotkey_id id)
 
 void obs_hotkey_pair_save(obs_hotkey_pair_id id, obs_data_array_t **p_data0, obs_data_array_t **p_data1)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_pair_save called");
 	if ((!p_data0 && !p_data1) || !lock())
 		return;
 
@@ -888,6 +916,7 @@ static inline void unregister_hotkey_pair(obs_hotkey_pair_id id)
 
 void obs_hotkey_unregister(obs_hotkey_id id)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_unregister called");
 	if (!lock())
 		return;
 
@@ -897,6 +926,7 @@ void obs_hotkey_unregister(obs_hotkey_id id)
 
 void obs_hotkey_pair_unregister(obs_hotkey_pair_id id)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_pair_unregister called");
 	if (!lock())
 		return;
 
@@ -969,6 +999,7 @@ void obs_hotkeys_free(void)
 
 void obs_enum_hotkeys(obs_hotkey_enum_func func, void *data)
 {
+	blog(LOG_DEBUG, "Function obs_enum_hotkeys called");
 	if (!lock())
 		return;
 
@@ -983,6 +1014,7 @@ void obs_enum_hotkeys(obs_hotkey_enum_func func, void *data)
 
 void obs_enum_hotkey_bindings(obs_hotkey_binding_enum_func func, void *data)
 {
+	blog(LOG_DEBUG, "Function obs_enum_hotkey_bindings called");
 	if (!lock())
 		return;
 
@@ -1095,6 +1127,7 @@ static inline bool inject_hotkey(void *data, size_t idx, obs_hotkey_binding_t *b
 
 void obs_hotkey_inject_event(obs_key_combination_t hotkey, bool pressed)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_inject_event called");
 	if (!lock())
 		return;
 
@@ -1109,6 +1142,7 @@ void obs_hotkey_inject_event(obs_key_combination_t hotkey, bool pressed)
 
 void obs_hotkey_enable_background_press(bool enable)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_enable_background_press called");
 	if (!lock())
 		return;
 
@@ -1181,6 +1215,7 @@ void *obs_hotkey_thread(void *arg)
 
 void obs_hotkey_trigger_routed_callback(obs_hotkey_id id, bool pressed)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_trigger_routed_callback called");
 	if (!lock())
 		return;
 
@@ -1200,6 +1235,7 @@ unlock:
 
 void obs_hotkey_set_callback_routing_func(obs_hotkey_callback_router_func func, void *data)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_set_callback_routing_func called");
 	if (!lock())
 		return;
 
@@ -1210,6 +1246,7 @@ void obs_hotkey_set_callback_routing_func(obs_hotkey_callback_router_func func, 
 
 void obs_hotkey_enable_callback_rerouting(bool enable)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_enable_callback_rerouting called");
 	if (!lock())
 		return;
 
@@ -1228,6 +1265,7 @@ static void obs_set_key_translation(obs_key_t key, const char *translation)
 
 void obs_hotkeys_set_translations_s(struct obs_hotkeys_translations *translations, size_t size)
 {
+	blog(LOG_DEBUG, "Function obs_hotkeys_set_translations_s called");
 #define ADD_TRANSLATION(key_name, var_name) \
 	if (t.var_name)                     \
 		obs_set_key_translation(key_name, t.var_name);
@@ -1365,6 +1403,7 @@ const char *obs_get_hotkey_translation(obs_key_t key, const char *def)
 
 void obs_hotkey_update_atomic(obs_hotkey_atomic_update_func func, void *data)
 {
+	blog(LOG_DEBUG, "Function obs_hotkey_update_atomic called");
 	if (!lock())
 		return;
 
@@ -1376,6 +1415,7 @@ void obs_hotkey_update_atomic(obs_hotkey_atomic_update_func func, void *data)
 void obs_hotkeys_set_audio_hotkeys_translations(const char *mute, const char *unmute, const char *push_to_mute,
 						const char *push_to_talk)
 {
+	blog(LOG_DEBUG, "Function obs_hotkeys_set_audio_hotkeys_translations called");
 #define SET_T(n)               \
 	bfree(obs->hotkeys.n); \
 	obs->hotkeys.n = bstrdup(n)
@@ -1388,6 +1428,7 @@ void obs_hotkeys_set_audio_hotkeys_translations(const char *mute, const char *un
 
 void obs_hotkeys_set_sceneitem_hotkeys_translations(const char *show, const char *hide)
 {
+	blog(LOG_DEBUG, "Function obs_hotkeys_set_sceneitem_hotkeys_translations called");
 #define SET_T(n)                           \
 	bfree(obs->hotkeys.sceneitem_##n); \
 	obs->hotkeys.sceneitem_##n = bstrdup(n)

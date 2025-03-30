@@ -32,6 +32,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <avrt.h>
+#include <util/base.h>
 #endif
 
 extern profiler_name_store_t *obs_get_profiler_name_store(void);
@@ -289,6 +290,7 @@ static inline bool audio_input_init(struct audio_input *input, struct audio_outp
 bool audio_output_connect(audio_t *audio, size_t mi, const struct audio_convert_info *conversion,
 			  audio_output_callback_t callback, void *param)
 {
+	blog(LOG_DEBUG, "Function audio_output_connect called");
 	bool success = false;
 
 	if (!audio || mi >= MAX_AUDIO_MIXES)
@@ -330,6 +332,7 @@ bool audio_output_connect(audio_t *audio, size_t mi, const struct audio_convert_
 
 void audio_output_disconnect(audio_t *audio, size_t mix_idx, audio_output_callback_t callback, void *param)
 {
+	blog(LOG_DEBUG, "Function audio_output_disconnect called");
 	if (!audio || mix_idx >= MAX_AUDIO_MIXES)
 		return;
 
@@ -352,6 +355,7 @@ static inline bool valid_audio_params(const struct audio_output_info *info)
 
 int audio_output_open(audio_t **audio, struct audio_output_info *info)
 {
+	blog(LOG_DEBUG, "Function audio_output_open called");
 	struct audio_output *out;
 	bool planar = is_audio_planar(info->format);
 
@@ -391,6 +395,7 @@ fail0:
 
 void audio_output_close(audio_t *audio)
 {
+	blog(LOG_DEBUG, "Function audio_output_close called");
 	void *thread_ret;
 
 	if (!audio)
@@ -421,6 +426,7 @@ const struct audio_output_info *audio_output_get_info(const audio_t *audio)
 
 bool audio_output_active(const audio_t *audio)
 {
+	blog(LOG_DEBUG, "Function audio_output_active called");
 	if (!audio)
 		return false;
 
@@ -436,20 +442,24 @@ bool audio_output_active(const audio_t *audio)
 
 size_t audio_output_get_block_size(const audio_t *audio)
 {
+	blog(LOG_DEBUG, "Function audio_output_get_block_size called");
 	return audio->block_size;
 }
 
 size_t audio_output_get_planes(const audio_t *audio)
 {
+	blog(LOG_DEBUG, "Function audio_output_get_planes called");
 	return audio->planes;
 }
 
 size_t audio_output_get_channels(const audio_t *audio)
 {
+	blog(LOG_DEBUG, "Function audio_output_get_channels called");
 	return audio->channels;
 }
 
 uint32_t audio_output_get_sample_rate(const audio_t *audio)
 {
+	blog(LOG_DEBUG, "Function audio_output_get_sample_rate called");
 	return audio->info.samples_per_sec;
 }

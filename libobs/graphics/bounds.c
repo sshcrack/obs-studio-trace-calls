@@ -20,33 +20,39 @@
 #include "matrix3.h"
 #include "matrix4.h"
 #include "plane.h"
+#include <util/base.h>
 
 void bounds_move(struct bounds *dst, const struct bounds *b, const struct vec3 *v)
 {
+	blog(LOG_DEBUG, "Function bounds_move called");
 	vec3_add(&dst->min, &b->min, v);
 	vec3_add(&dst->max, &b->max, v);
 }
 
 void bounds_scale(struct bounds *dst, const struct bounds *b, const struct vec3 *v)
 {
+	blog(LOG_DEBUG, "Function bounds_scale called");
 	vec3_mul(&dst->min, &b->min, v);
 	vec3_mul(&dst->max, &b->max, v);
 }
 
 void bounds_merge(struct bounds *dst, const struct bounds *b1, const struct bounds *b2)
 {
+	blog(LOG_DEBUG, "Function bounds_merge called");
 	vec3_min(&dst->min, &b1->min, &b2->min);
 	vec3_max(&dst->max, &b1->max, &b2->max);
 }
 
 void bounds_merge_point(struct bounds *dst, const struct bounds *b, const struct vec3 *v)
 {
+	blog(LOG_DEBUG, "Function bounds_merge_point called");
 	vec3_min(&dst->min, &b->min, v);
 	vec3_max(&dst->max, &b->max, v);
 }
 
 void bounds_get_point(struct vec3 *dst, const struct bounds *b, unsigned int i)
 {
+	blog(LOG_DEBUG, "Function bounds_get_point called");
 	if (i > 8)
 		return;
 
@@ -82,6 +88,7 @@ void bounds_get_point(struct vec3 *dst, const struct bounds *b, unsigned int i)
 
 void bounds_get_center(struct vec3 *dst, const struct bounds *b)
 {
+	blog(LOG_DEBUG, "Function bounds_get_center called");
 	vec3_sub(dst, &b->max, &b->min);
 	vec3_mulf(dst, dst, 0.5f);
 	vec3_add(dst, dst, &b->min);
@@ -89,6 +96,7 @@ void bounds_get_center(struct vec3 *dst, const struct bounds *b)
 
 void bounds_transform(struct bounds *dst, const struct bounds *b, const struct matrix4 *m)
 {
+	blog(LOG_DEBUG, "Function bounds_transform called");
 	struct bounds temp;
 	bool b_init = false;
 	int i;
@@ -127,6 +135,7 @@ void bounds_transform(struct bounds *dst, const struct bounds *b, const struct m
 
 void bounds_transform3x4(struct bounds *dst, const struct bounds *b, const struct matrix3 *m)
 {
+	blog(LOG_DEBUG, "Function bounds_transform3x4 called");
 	struct bounds temp;
 	bool b_init = false;
 	int i;
@@ -165,6 +174,7 @@ void bounds_transform3x4(struct bounds *dst, const struct bounds *b, const struc
 
 bool bounds_intersection_ray(const struct bounds *b, const struct vec3 *orig, const struct vec3 *dir, float *t)
 {
+	blog(LOG_DEBUG, "Function bounds_intersection_ray called");
 	float t_max = M_INFINITE;
 	float t_min = -M_INFINITE;
 	struct vec3 center, max_offset, box_offset;
@@ -208,6 +218,7 @@ bool bounds_intersection_ray(const struct bounds *b, const struct vec3 *orig, co
 
 bool bounds_intersection_line(const struct bounds *b, const struct vec3 *p1, const struct vec3 *p2, float *t)
 {
+	blog(LOG_DEBUG, "Function bounds_intersection_line called");
 	struct vec3 dir;
 	float length;
 
@@ -227,6 +238,7 @@ bool bounds_intersection_line(const struct bounds *b, const struct vec3 *p1, con
 
 bool bounds_plane_test(const struct bounds *b, const struct plane *p)
 {
+	blog(LOG_DEBUG, "Function bounds_plane_test called");
 	struct vec3 vmin, vmax;
 	int i;
 
@@ -251,6 +263,7 @@ bool bounds_plane_test(const struct bounds *b, const struct plane *p)
 
 bool bounds_under_plane(const struct bounds *b, const struct plane *p)
 {
+	blog(LOG_DEBUG, "Function bounds_under_plane called");
 	struct vec3 vmin;
 
 	vmin.x = (p->dir.x < 0.0f) ? b->max.x : b->min.x;
@@ -262,6 +275,7 @@ bool bounds_under_plane(const struct bounds *b, const struct plane *p)
 
 bool bounds_intersects(const struct bounds *b, const struct bounds *test, float epsilon)
 {
+	blog(LOG_DEBUG, "Function bounds_intersects called");
 	return ((b->min.x - test->max.x) <= epsilon) && ((test->min.x - b->max.x) <= epsilon) &&
 	       ((b->min.y - test->max.y) <= epsilon) && ((test->min.y - b->max.y) <= epsilon) &&
 	       ((b->min.z - test->max.z) <= epsilon) && ((test->min.z - b->max.z) <= epsilon);
@@ -269,6 +283,7 @@ bool bounds_intersects(const struct bounds *b, const struct bounds *test, float 
 
 bool bounds_intersects_obb(const struct bounds *b, const struct bounds *test, const struct matrix4 *m, float epsilon)
 {
+	blog(LOG_DEBUG, "Function bounds_intersects_obb called");
 	struct bounds b_tr, test_tr;
 	struct matrix4 m_inv;
 
@@ -282,6 +297,7 @@ bool bounds_intersects_obb(const struct bounds *b, const struct bounds *test, co
 
 bool bounds_intersects_obb3x4(const struct bounds *b, const struct bounds *test, const struct matrix3 *m, float epsilon)
 {
+	blog(LOG_DEBUG, "Function bounds_intersects_obb3x4 called");
 	struct bounds b_tr, test_tr;
 	struct matrix3 m_inv;
 
@@ -303,6 +319,7 @@ static inline float vec3or_offset_len(const struct bounds *b, const struct vec3 
 
 float bounds_min_dist(const struct bounds *b, const struct plane *p)
 {
+	blog(LOG_DEBUG, "Function bounds_min_dist called");
 	struct vec3 center;
 	float vec_len = vec3or_offset_len(b, &p->dir) * 0.5f;
 	float center_dist;

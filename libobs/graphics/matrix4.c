@@ -19,9 +19,11 @@
 #include "matrix4.h"
 #include "matrix3.h"
 #include "quat.h"
+#include <util/base.h>
 
 void matrix4_from_matrix3(struct matrix4 *dst, const struct matrix3 *m)
 {
+	blog(LOG_DEBUG, "Function matrix4_from_matrix3 called");
 	dst->x.m = m->x.m;
 	dst->y.m = m->y.m;
 	dst->z.m = m->z.m;
@@ -31,6 +33,7 @@ void matrix4_from_matrix3(struct matrix4 *dst, const struct matrix3 *m)
 
 void matrix4_from_quat(struct matrix4 *dst, const struct quat *q)
 {
+	blog(LOG_DEBUG, "Function matrix4_from_quat called");
 	float norm = quat_dot(q, q);
 	float s = (norm > 0.0f) ? (2.0f / norm) : 0.0f;
 
@@ -52,6 +55,7 @@ void matrix4_from_quat(struct matrix4 *dst, const struct quat *q)
 
 void matrix4_from_axisang(struct matrix4 *dst, const struct axisang *aa)
 {
+	blog(LOG_DEBUG, "Function matrix4_from_axisang called");
 	struct quat q;
 	quat_from_axisang(&q, aa);
 	matrix4_from_quat(dst, &q);
@@ -59,6 +63,7 @@ void matrix4_from_axisang(struct matrix4 *dst, const struct axisang *aa)
 
 void matrix4_mul(struct matrix4 *dst, const struct matrix4 *m1, const struct matrix4 *m2)
 {
+	blog(LOG_DEBUG, "Function matrix4_mul called");
 	const struct vec4 *m1v = (const struct vec4 *)m1;
 	const float *m2f = (const float *)m2;
 	struct vec4 out[4];
@@ -109,6 +114,7 @@ static inline float get_3x3_determinant(const float *m)
 
 float matrix4_determinant(const struct matrix4 *m)
 {
+	blog(LOG_DEBUG, "Function matrix4_determinant called");
 	const float *mf = (const float *)m;
 	float det, result = 0.0f, i = 1.0f;
 	float m3x3[9];
@@ -126,6 +132,7 @@ float matrix4_determinant(const struct matrix4 *m)
 
 void matrix4_translate3v(struct matrix4 *dst, const struct matrix4 *m, const struct vec3 *v)
 {
+	blog(LOG_DEBUG, "Function matrix4_translate3v called");
 	struct matrix4 temp;
 	vec4_set(&temp.x, 1.0f, 0.0f, 0.0f, 0.0f);
 	vec4_set(&temp.y, 0.0f, 1.0f, 0.0f, 0.0f);
@@ -137,6 +144,7 @@ void matrix4_translate3v(struct matrix4 *dst, const struct matrix4 *m, const str
 
 void matrix4_translate4v(struct matrix4 *dst, const struct matrix4 *m, const struct vec4 *v)
 {
+	blog(LOG_DEBUG, "Function matrix4_translate4v called");
 	struct matrix4 temp;
 	vec4_set(&temp.x, 1.0f, 0.0f, 0.0f, 0.0f);
 	vec4_set(&temp.y, 0.0f, 1.0f, 0.0f, 0.0f);
@@ -148,6 +156,7 @@ void matrix4_translate4v(struct matrix4 *dst, const struct matrix4 *m, const str
 
 void matrix4_rotate(struct matrix4 *dst, const struct matrix4 *m, const struct quat *q)
 {
+	blog(LOG_DEBUG, "Function matrix4_rotate called");
 	struct matrix4 temp;
 	matrix4_from_quat(&temp, q);
 	matrix4_mul(dst, m, &temp);
@@ -155,6 +164,7 @@ void matrix4_rotate(struct matrix4 *dst, const struct matrix4 *m, const struct q
 
 void matrix4_rotate_aa(struct matrix4 *dst, const struct matrix4 *m, const struct axisang *aa)
 {
+	blog(LOG_DEBUG, "Function matrix4_rotate_aa called");
 	struct matrix4 temp;
 	matrix4_from_axisang(&temp, aa);
 	matrix4_mul(dst, m, &temp);
@@ -162,6 +172,7 @@ void matrix4_rotate_aa(struct matrix4 *dst, const struct matrix4 *m, const struc
 
 void matrix4_scale(struct matrix4 *dst, const struct matrix4 *m, const struct vec3 *v)
 {
+	blog(LOG_DEBUG, "Function matrix4_scale called");
 	struct matrix4 temp;
 	vec4_set(&temp.x, v->x, 0.0f, 0.0f, 0.0f);
 	vec4_set(&temp.y, 0.0f, v->y, 0.0f, 0.0f);
@@ -172,6 +183,7 @@ void matrix4_scale(struct matrix4 *dst, const struct matrix4 *m, const struct ve
 
 void matrix4_translate3v_i(struct matrix4 *dst, const struct vec3 *v, const struct matrix4 *m)
 {
+	blog(LOG_DEBUG, "Function matrix4_translate3v_i called");
 	struct matrix4 temp;
 	vec4_set(&temp.x, 1.0f, 0.0f, 0.0f, 0.0f);
 	vec4_set(&temp.y, 0.0f, 1.0f, 0.0f, 0.0f);
@@ -183,6 +195,7 @@ void matrix4_translate3v_i(struct matrix4 *dst, const struct vec3 *v, const stru
 
 void matrix4_translate4v_i(struct matrix4 *dst, const struct vec4 *v, const struct matrix4 *m)
 {
+	blog(LOG_DEBUG, "Function matrix4_translate4v_i called");
 	struct matrix4 temp;
 	vec4_set(&temp.x, 1.0f, 0.0f, 0.0f, 0.0f);
 	vec4_set(&temp.y, 0.0f, 1.0f, 0.0f, 0.0f);
@@ -194,6 +207,7 @@ void matrix4_translate4v_i(struct matrix4 *dst, const struct vec4 *v, const stru
 
 void matrix4_rotate_i(struct matrix4 *dst, const struct quat *q, const struct matrix4 *m)
 {
+	blog(LOG_DEBUG, "Function matrix4_rotate_i called");
 	struct matrix4 temp;
 	matrix4_from_quat(&temp, q);
 	matrix4_mul(dst, &temp, m);
@@ -201,6 +215,7 @@ void matrix4_rotate_i(struct matrix4 *dst, const struct quat *q, const struct ma
 
 void matrix4_rotate_aa_i(struct matrix4 *dst, const struct axisang *aa, const struct matrix4 *m)
 {
+	blog(LOG_DEBUG, "Function matrix4_rotate_aa_i called");
 	struct matrix4 temp;
 	matrix4_from_axisang(&temp, aa);
 	matrix4_mul(dst, &temp, m);
@@ -208,6 +223,7 @@ void matrix4_rotate_aa_i(struct matrix4 *dst, const struct axisang *aa, const st
 
 void matrix4_scale_i(struct matrix4 *dst, const struct vec3 *v, const struct matrix4 *m)
 {
+	blog(LOG_DEBUG, "Function matrix4_scale_i called");
 	struct matrix4 temp;
 	vec4_set(&temp.x, v->x, 0.0f, 0.0f, 0.0f);
 	vec4_set(&temp.y, 0.0f, v->y, 0.0f, 0.0f);
@@ -218,6 +234,7 @@ void matrix4_scale_i(struct matrix4 *dst, const struct vec3 *v, const struct mat
 
 bool matrix4_inv(struct matrix4 *dst, const struct matrix4 *m)
 {
+	blog(LOG_DEBUG, "Function matrix4_inv called");
 	struct vec4 *dstv;
 	float det;
 	float m3x3[9];
@@ -247,6 +264,7 @@ bool matrix4_inv(struct matrix4 *dst, const struct matrix4 *m)
 
 void matrix4_transpose(struct matrix4 *dst, const struct matrix4 *m)
 {
+	blog(LOG_DEBUG, "Function matrix4_transpose called");
 	if (dst == m) {
 		struct matrix4 temp = *m;
 		matrix4_transpose(dst, &temp);

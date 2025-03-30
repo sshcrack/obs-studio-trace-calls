@@ -22,20 +22,24 @@
 #include "plane.h"
 #include "matrix3.h"
 #include "math-extra.h"
+#include <util/base.h>
 
 void vec3_from_vec4(struct vec3 *dst, const struct vec4 *v)
 {
+	blog(LOG_DEBUG, "Function vec3_from_vec4 called");
 	dst->m = v->m;
 	dst->w = 0.0f;
 }
 
 float vec3_plane_dist(const struct vec3 *v, const struct plane *p)
 {
+	blog(LOG_DEBUG, "Function vec3_plane_dist called");
 	return vec3_dot(v, &p->dir) - p->dist;
 }
 
 void vec3_rotate(struct vec3 *dst, const struct vec3 *v, const struct matrix3 *m)
 {
+	blog(LOG_DEBUG, "Function vec3_rotate called");
 	struct vec3 temp;
 	vec3_copy(&temp, v);
 
@@ -47,6 +51,7 @@ void vec3_rotate(struct vec3 *dst, const struct vec3 *v, const struct matrix3 *m
 
 void vec3_transform(struct vec3 *dst, const struct vec3 *v, const struct matrix4 *m)
 {
+	blog(LOG_DEBUG, "Function vec3_transform called");
 	struct vec4 v4;
 	vec4_from_vec3(&v4, v);
 	vec4_transform(&v4, &v4, m);
@@ -55,6 +60,7 @@ void vec3_transform(struct vec3 *dst, const struct vec3 *v, const struct matrix4
 
 void vec3_transform3x4(struct vec3 *dst, const struct vec3 *v, const struct matrix3 *m)
 {
+	blog(LOG_DEBUG, "Function vec3_transform3x4 called");
 	struct vec3 temp;
 	vec3_sub(&temp, v, &m->t);
 
@@ -66,6 +72,7 @@ void vec3_transform3x4(struct vec3 *dst, const struct vec3 *v, const struct matr
 
 void vec3_mirror(struct vec3 *dst, const struct vec3 *v, const struct plane *p)
 {
+	blog(LOG_DEBUG, "Function vec3_mirror called");
 	struct vec3 temp;
 	vec3_mulf(&temp, &p->dir, vec3_plane_dist(v, p) * 2.0f);
 	vec3_sub(dst, v, &temp);
@@ -73,6 +80,7 @@ void vec3_mirror(struct vec3 *dst, const struct vec3 *v, const struct plane *p)
 
 void vec3_mirrorv(struct vec3 *dst, const struct vec3 *v, const struct vec3 *vec)
 {
+	blog(LOG_DEBUG, "Function vec3_mirrorv called");
 	struct vec3 temp;
 	vec3_mulf(&temp, vec, vec3_dot(v, vec) * 2.0f);
 	vec3_sub(dst, v, &temp);
@@ -80,6 +88,7 @@ void vec3_mirrorv(struct vec3 *dst, const struct vec3 *v, const struct vec3 *vec
 
 void vec3_rand(struct vec3 *dst, int positive_only)
 {
+	blog(LOG_DEBUG, "Function vec3_rand called");
 	dst->x = rand_float(positive_only);
 	dst->y = rand_float(positive_only);
 	dst->z = rand_float(positive_only);

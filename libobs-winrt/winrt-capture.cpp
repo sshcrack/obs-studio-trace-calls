@@ -1,4 +1,5 @@
 #include "winrt-capture.h"
+#include <util/base.h>
 
 extern "C" EXPORT BOOL winrt_capture_supported()
 try {
@@ -434,6 +435,7 @@ extern "C" EXPORT struct winrt_capture *winrt_capture_init_monitor(BOOL cursor, 
 
 extern "C" EXPORT void winrt_capture_free(struct winrt_capture *capture)
 {
+	blog(LOG_DEBUG, "Function winrt_capture_free called");
 	if (capture) {
 		struct winrt_capture *current = capture_list;
 		if (current == capture) {
@@ -482,11 +484,13 @@ extern "C" EXPORT void winrt_capture_free(struct winrt_capture *capture)
 
 extern "C" EXPORT BOOL winrt_capture_active(const struct winrt_capture *capture)
 {
+	blog(LOG_DEBUG, "Function winrt_capture_active called");
 	return capture->active;
 }
 
 extern "C" EXPORT BOOL winrt_capture_show_cursor(struct winrt_capture *capture, BOOL visible)
 {
+	blog(LOG_DEBUG, "Function winrt_capture_show_cursor called");
 	BOOL success = FALSE;
 
 	try {
@@ -510,11 +514,13 @@ extern "C" EXPORT BOOL winrt_capture_show_cursor(struct winrt_capture *capture, 
 
 extern "C" EXPORT enum gs_color_space winrt_capture_get_color_space(const struct winrt_capture *capture)
 {
+	blog(LOG_DEBUG, "Function winrt_capture_get_color_space called");
 	return (capture->format == DXGI_FORMAT_R16G16B16A16_FLOAT) ? GS_CS_709_EXTENDED : GS_CS_SRGB;
 }
 
 extern "C" EXPORT void winrt_capture_render(struct winrt_capture *capture)
 {
+	blog(LOG_DEBUG, "Function winrt_capture_render called");
 	if (capture->texture_written) {
 		const char *tech_name = "Draw";
 		float multiplier = 1.f;
@@ -566,16 +572,19 @@ extern "C" EXPORT void winrt_capture_render(struct winrt_capture *capture)
 
 extern "C" EXPORT uint32_t winrt_capture_width(const struct winrt_capture *capture)
 {
+	blog(LOG_DEBUG, "Function winrt_capture_width called");
 	return capture ? capture->texture_width : 0;
 }
 
 extern "C" EXPORT uint32_t winrt_capture_height(const struct winrt_capture *capture)
 {
+	blog(LOG_DEBUG, "Function winrt_capture_height called");
 	return capture ? capture->texture_height : 0;
 }
 
 extern "C" EXPORT void winrt_capture_thread_start()
 {
+	blog(LOG_DEBUG, "Function winrt_capture_thread_start called");
 	struct winrt_capture *capture = capture_list;
 	void *const device = gs_get_device_obj();
 	while (capture) {
@@ -586,6 +595,7 @@ extern "C" EXPORT void winrt_capture_thread_start()
 
 extern "C" EXPORT void winrt_capture_thread_stop()
 {
+	blog(LOG_DEBUG, "Function winrt_capture_thread_stop called");
 	struct winrt_capture *capture = capture_list;
 	while (capture) {
 		winrt_capture_device_loss_release(capture);

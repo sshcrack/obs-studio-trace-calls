@@ -18,6 +18,7 @@
 #include "obs-nix-platform.h"
 
 #include <assert.h>
+#include <util/base.h>
 
 static enum obs_nix_platform_type obs_nix_platform = OBS_NIX_PLATFORM_X11_EGL;
 
@@ -25,17 +26,20 @@ static void *obs_nix_platform_display = NULL;
 
 void obs_set_nix_platform(enum obs_nix_platform_type platform)
 {
+	blog(LOG_DEBUG, "Function obs_set_nix_platform called");
 	assert(platform != OBS_NIX_PLATFORM_INVALID);
 	obs_nix_platform = platform;
 }
 
 enum obs_nix_platform_type obs_get_nix_platform(void)
 {
+	blog(LOG_DEBUG, "Function obs_get_nix_platform called");
 	return obs_nix_platform;
 }
 
 void obs_set_nix_platform_display(void *display)
 {
+	blog(LOG_DEBUG, "Function obs_set_nix_platform_display called");
 	obs_nix_platform_display = display;
 }
 

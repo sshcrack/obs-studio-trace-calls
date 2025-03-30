@@ -16,6 +16,7 @@
 ******************************************************************************/
 #include <assert.h>
 #include "video-frame.h"
+#include <util/base.h>
 
 #define HALF(size) ((size + 1) / 2)
 #define ALIGN(size, alignment) *size = (*size + alignment - 1) & (~(alignment - 1));
@@ -189,6 +190,7 @@ void video_frame_get_plane_heights(uint32_t heights[MAX_AV_PLANES], enum video_f
 
 void video_frame_init(struct video_frame *frame, enum video_format format, uint32_t width, uint32_t height)
 {
+	blog(LOG_DEBUG, "Function video_frame_init called");
 	size_t size = 0;
 	uint32_t linesizes[MAX_AV_PLANES];
 	uint32_t heights[MAX_AV_PLANES];
@@ -234,6 +236,7 @@ void video_frame_init(struct video_frame *frame, enum video_format format, uint3
 
 void video_frame_copy(struct video_frame *dst, const struct video_frame *src, enum video_format format, uint32_t cy)
 {
+	blog(LOG_DEBUG, "Function video_frame_copy called");
 	uint32_t heights[MAX_AV_PLANES];
 
 	memset(heights, 0, sizeof(heights));

@@ -19,6 +19,7 @@
 #include "util/darray.h"
 #include "obs-internal.h"
 #include "obs-properties.h"
+#include <util/base.h>
 
 static inline void *get_property_data(struct obs_property *prop);
 
@@ -225,12 +226,14 @@ void obs_properties_set_param(obs_properties_t *props, void *param, void (*destr
 
 void obs_properties_set_flags(obs_properties_t *props, uint32_t flags)
 {
+	blog(LOG_DEBUG, "Function obs_properties_set_flags called");
 	if (props)
 		props->flags = flags;
 }
 
 uint32_t obs_properties_get_flags(obs_properties_t *props)
 {
+	blog(LOG_DEBUG, "Function obs_properties_get_flags called");
 	return props ? props->flags : 0;
 }
 
@@ -273,6 +276,7 @@ static void obs_property_destroy(struct obs_property *property)
 
 void obs_properties_destroy(obs_properties_t *props)
 {
+	blog(LOG_DEBUG, "Function obs_properties_destroy called");
 	if (props) {
 		struct obs_property *p, *tmp;
 
@@ -328,6 +332,7 @@ obs_properties_t *obs_properties_get_parent(obs_properties_t *props)
 
 void obs_properties_remove_by_name(obs_properties_t *props, const char *name)
 {
+	blog(LOG_DEBUG, "Function obs_properties_remove_by_name called");
 	if (!props)
 		return;
 
@@ -375,6 +380,7 @@ void obs_properties_apply_settings_internal(obs_properties_t *props, obs_propert
 
 void obs_properties_apply_settings(obs_properties_t *props, obs_data_t *settings)
 {
+	blog(LOG_DEBUG, "Function obs_properties_apply_settings called");
 	if (!props)
 		return;
 
@@ -782,6 +788,7 @@ static inline struct list_data *get_list_fmt_data(struct obs_property *p, enum o
 
 bool obs_property_next(obs_property_t **p)
 {
+	blog(LOG_DEBUG, "Function obs_property_next called");
 	if (!p || !*p)
 		return false;
 
@@ -791,12 +798,14 @@ bool obs_property_next(obs_property_t **p)
 
 void obs_property_set_modified_callback(obs_property_t *p, obs_property_modified_t modified)
 {
+	blog(LOG_DEBUG, "Function obs_property_set_modified_callback called");
 	if (p)
 		p->modified = modified;
 }
 
 void obs_property_set_modified_callback2(obs_property_t *p, obs_property_modified2_t modified2, void *priv)
 {
+	blog(LOG_DEBUG, "Function obs_property_set_modified_callback2 called");
 	if (p) {
 		p->modified2 = modified2;
 		p->priv = priv;
@@ -805,6 +814,7 @@ void obs_property_set_modified_callback2(obs_property_t *p, obs_property_modifie
 
 bool obs_property_modified(obs_property_t *p, obs_data_t *settings)
 {
+	blog(LOG_DEBUG, "Function obs_property_modified called");
 	if (p) {
 		if (p->modified) {
 			obs_properties_t *top = get_topmost_parent(p->parent);
@@ -819,6 +829,7 @@ bool obs_property_modified(obs_property_t *p, obs_data_t *settings)
 
 bool obs_property_button_clicked(obs_property_t *p, void *obj)
 {
+	blog(LOG_DEBUG, "Function obs_property_button_clicked called");
 	struct obs_context_data *context = obj;
 	if (p) {
 		struct button_data *data = get_type_data(p, OBS_PROPERTY_BUTTON);
@@ -835,18 +846,21 @@ bool obs_property_button_clicked(obs_property_t *p, void *obj)
 
 void obs_property_set_visible(obs_property_t *p, bool visible)
 {
+	blog(LOG_DEBUG, "Function obs_property_set_visible called");
 	if (p)
 		p->visible = visible;
 }
 
 void obs_property_set_enabled(obs_property_t *p, bool enabled)
 {
+	blog(LOG_DEBUG, "Function obs_property_set_enabled called");
 	if (p)
 		p->enabled = enabled;
 }
 
 void obs_property_set_description(obs_property_t *p, const char *description)
 {
+	blog(LOG_DEBUG, "Function obs_property_set_description called");
 	if (p) {
 		bfree(p->desc);
 		p->desc = description && *description ? bstrdup(description) : NULL;
@@ -855,6 +869,7 @@ void obs_property_set_description(obs_property_t *p, const char *description)
 
 void obs_property_set_long_description(obs_property_t *p, const char *long_desc)
 {
+	blog(LOG_DEBUG, "Function obs_property_set_long_description called");
 	if (p) {
 		bfree(p->long_desc);
 		p->long_desc = long_desc && *long_desc ? bstrdup(long_desc) : NULL;
@@ -878,39 +893,46 @@ const char *obs_property_long_description(obs_property_t *p)
 
 enum obs_property_type obs_property_get_type(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_get_type called");
 	return p ? p->type : OBS_PROPERTY_INVALID;
 }
 
 bool obs_property_enabled(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_enabled called");
 	return p ? p->enabled : false;
 }
 
 bool obs_property_visible(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_visible called");
 	return p ? p->visible : false;
 }
 
 int obs_property_int_min(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_int_min called");
 	struct int_data *data = get_type_data(p, OBS_PROPERTY_INT);
 	return data ? data->min : 0;
 }
 
 int obs_property_int_max(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_int_max called");
 	struct int_data *data = get_type_data(p, OBS_PROPERTY_INT);
 	return data ? data->max : 0;
 }
 
 int obs_property_int_step(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_int_step called");
 	struct int_data *data = get_type_data(p, OBS_PROPERTY_INT);
 	return data ? data->step : 0;
 }
 
 enum obs_number_type obs_property_int_type(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_int_type called");
 	struct int_data *data = get_type_data(p, OBS_PROPERTY_INT);
 	return data ? data->type : OBS_NUMBER_SCROLLER;
 }
@@ -923,18 +945,21 @@ const char *obs_property_int_suffix(obs_property_t *p)
 
 double obs_property_float_min(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_float_min called");
 	struct float_data *data = get_type_data(p, OBS_PROPERTY_FLOAT);
 	return data ? data->min : 0;
 }
 
 double obs_property_float_max(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_float_max called");
 	struct float_data *data = get_type_data(p, OBS_PROPERTY_FLOAT);
 	return data ? data->max : 0;
 }
 
 double obs_property_float_step(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_float_step called");
 	struct float_data *data = get_type_data(p, OBS_PROPERTY_FLOAT);
 	return data ? data->step : 0;
 }
@@ -947,36 +972,42 @@ const char *obs_property_float_suffix(obs_property_t *p)
 
 enum obs_number_type obs_property_float_type(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_float_type called");
 	struct float_data *data = get_type_data(p, OBS_PROPERTY_FLOAT);
 	return data ? data->type : OBS_NUMBER_SCROLLER;
 }
 
 enum obs_text_type obs_property_text_type(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_text_type called");
 	struct text_data *data = get_type_data(p, OBS_PROPERTY_TEXT);
 	return data ? data->type : OBS_TEXT_DEFAULT;
 }
 
 bool obs_property_text_monospace(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_text_monospace called");
 	struct text_data *data = get_type_data(p, OBS_PROPERTY_TEXT);
 	return data ? data->monospace : false;
 }
 
 enum obs_text_info_type obs_property_text_info_type(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_text_info_type called");
 	struct text_data *data = get_type_data(p, OBS_PROPERTY_TEXT);
 	return data ? data->info_type : OBS_TEXT_INFO_NORMAL;
 }
 
 bool obs_property_text_info_word_wrap(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_text_info_word_wrap called");
 	struct text_data *data = get_type_data(p, OBS_PROPERTY_TEXT);
 	return data ? data->info_word_wrap : true;
 }
 
 enum obs_path_type obs_property_path_type(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_path_type called");
 	struct path_data *data = get_type_data(p, OBS_PROPERTY_PATH);
 	return data ? data->type : OBS_PATH_DIRECTORY;
 }
@@ -995,18 +1026,21 @@ const char *obs_property_path_default_path(obs_property_t *p)
 
 enum obs_combo_type obs_property_list_type(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_type called");
 	struct list_data *data = get_list_data(p);
 	return data ? data->type : OBS_COMBO_TYPE_INVALID;
 }
 
 enum obs_combo_format obs_property_list_format(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_format called");
 	struct list_data *data = get_list_data(p);
 	return data ? data->format : OBS_COMBO_FORMAT_INVALID;
 }
 
 void obs_property_int_set_limits(obs_property_t *p, int min, int max, int step)
 {
+	blog(LOG_DEBUG, "Function obs_property_int_set_limits called");
 	struct int_data *data = get_type_data(p, OBS_PROPERTY_INT);
 	if (!data)
 		return;
@@ -1018,6 +1052,7 @@ void obs_property_int_set_limits(obs_property_t *p, int min, int max, int step)
 
 void obs_property_float_set_limits(obs_property_t *p, double min, double max, double step)
 {
+	blog(LOG_DEBUG, "Function obs_property_float_set_limits called");
 	struct float_data *data = get_type_data(p, OBS_PROPERTY_FLOAT);
 	if (!data)
 		return;
@@ -1029,6 +1064,7 @@ void obs_property_float_set_limits(obs_property_t *p, double min, double max, do
 
 void obs_property_int_set_suffix(obs_property_t *p, const char *suffix)
 {
+	blog(LOG_DEBUG, "Function obs_property_int_set_suffix called");
 	struct int_data *data = get_type_data(p, OBS_PROPERTY_INT);
 	if (!data)
 		return;
@@ -1039,6 +1075,7 @@ void obs_property_int_set_suffix(obs_property_t *p, const char *suffix)
 
 void obs_property_float_set_suffix(obs_property_t *p, const char *suffix)
 {
+	blog(LOG_DEBUG, "Function obs_property_float_set_suffix called");
 	struct float_data *data = get_type_data(p, OBS_PROPERTY_FLOAT);
 	if (!data)
 		return;
@@ -1049,6 +1086,7 @@ void obs_property_float_set_suffix(obs_property_t *p, const char *suffix)
 
 void obs_property_text_set_monospace(obs_property_t *p, bool monospace)
 {
+	blog(LOG_DEBUG, "Function obs_property_text_set_monospace called");
 	struct text_data *data = get_type_data(p, OBS_PROPERTY_TEXT);
 	if (!data)
 		return;
@@ -1058,6 +1096,7 @@ void obs_property_text_set_monospace(obs_property_t *p, bool monospace)
 
 void obs_property_text_set_info_type(obs_property_t *p, enum obs_text_info_type type)
 {
+	blog(LOG_DEBUG, "Function obs_property_text_set_info_type called");
 	struct text_data *data = get_type_data(p, OBS_PROPERTY_TEXT);
 	if (!data)
 		return;
@@ -1067,6 +1106,7 @@ void obs_property_text_set_info_type(obs_property_t *p, enum obs_text_info_type 
 
 void obs_property_text_set_info_word_wrap(obs_property_t *p, bool word_wrap)
 {
+	blog(LOG_DEBUG, "Function obs_property_text_set_info_word_wrap called");
 	struct text_data *data = get_type_data(p, OBS_PROPERTY_TEXT);
 	if (!data)
 		return;
@@ -1076,6 +1116,7 @@ void obs_property_text_set_info_word_wrap(obs_property_t *p, bool word_wrap)
 
 void obs_property_button_set_type(obs_property_t *p, enum obs_button_type type)
 {
+	blog(LOG_DEBUG, "Function obs_property_button_set_type called");
 	struct button_data *data = get_type_data(p, OBS_PROPERTY_BUTTON);
 	if (!data)
 		return;
@@ -1085,6 +1126,7 @@ void obs_property_button_set_type(obs_property_t *p, enum obs_button_type type)
 
 void obs_property_button_set_url(obs_property_t *p, char *url)
 {
+	blog(LOG_DEBUG, "Function obs_property_button_set_url called");
 	struct button_data *data = get_type_data(p, OBS_PROPERTY_BUTTON);
 	if (!data)
 		return;
@@ -1094,6 +1136,7 @@ void obs_property_button_set_url(obs_property_t *p, char *url)
 
 void obs_property_list_clear(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_clear called");
 	struct list_data *data = get_list_data(p);
 	if (data)
 		list_data_free(data);
@@ -1135,6 +1178,7 @@ static void insert_item(struct list_data *data, size_t idx, const char *name, co
 
 size_t obs_property_list_add_string(obs_property_t *p, const char *name, const char *val)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_add_string called");
 	struct list_data *data = get_list_data(p);
 	if (data && data->format == OBS_COMBO_FORMAT_STRING)
 		return add_item(data, name, val);
@@ -1143,6 +1187,7 @@ size_t obs_property_list_add_string(obs_property_t *p, const char *name, const c
 
 size_t obs_property_list_add_int(obs_property_t *p, const char *name, long long val)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_add_int called");
 	struct list_data *data = get_list_data(p);
 	if (data && data->format == OBS_COMBO_FORMAT_INT)
 		return add_item(data, name, &val);
@@ -1151,6 +1196,7 @@ size_t obs_property_list_add_int(obs_property_t *p, const char *name, long long 
 
 size_t obs_property_list_add_float(obs_property_t *p, const char *name, double val)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_add_float called");
 	struct list_data *data = get_list_data(p);
 	if (data && data->format == OBS_COMBO_FORMAT_FLOAT)
 		return add_item(data, name, &val);
@@ -1159,6 +1205,7 @@ size_t obs_property_list_add_float(obs_property_t *p, const char *name, double v
 
 size_t obs_property_list_add_bool(obs_property_t *p, const char *name, bool val)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_add_bool called");
 	struct list_data *data = get_list_data(p);
 	if (data && data->format == OBS_COMBO_FORMAT_BOOL)
 		return add_item(data, name, &val);
@@ -1167,6 +1214,7 @@ size_t obs_property_list_add_bool(obs_property_t *p, const char *name, bool val)
 
 void obs_property_list_insert_string(obs_property_t *p, size_t idx, const char *name, const char *val)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_insert_string called");
 	struct list_data *data = get_list_data(p);
 	if (data && data->format == OBS_COMBO_FORMAT_STRING)
 		insert_item(data, idx, name, val);
@@ -1174,6 +1222,7 @@ void obs_property_list_insert_string(obs_property_t *p, size_t idx, const char *
 
 void obs_property_list_insert_int(obs_property_t *p, size_t idx, const char *name, long long val)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_insert_int called");
 	struct list_data *data = get_list_data(p);
 	if (data && data->format == OBS_COMBO_FORMAT_INT)
 		insert_item(data, idx, name, &val);
@@ -1181,6 +1230,7 @@ void obs_property_list_insert_int(obs_property_t *p, size_t idx, const char *nam
 
 void obs_property_list_insert_float(obs_property_t *p, size_t idx, const char *name, double val)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_insert_float called");
 	struct list_data *data = get_list_data(p);
 	if (data && data->format == OBS_COMBO_FORMAT_FLOAT)
 		insert_item(data, idx, name, &val);
@@ -1188,6 +1238,7 @@ void obs_property_list_insert_float(obs_property_t *p, size_t idx, const char *n
 
 void obs_property_list_insert_bool(obs_property_t *p, size_t idx, const char *name, bool val)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_insert_bool called");
 	struct list_data *data = get_list_data(p);
 	if (data && data->format == OBS_COMBO_FORMAT_BOOL)
 		insert_item(data, idx, name, &val);
@@ -1195,6 +1246,7 @@ void obs_property_list_insert_bool(obs_property_t *p, size_t idx, const char *na
 
 void obs_property_list_item_remove(obs_property_t *p, size_t idx)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_item_remove called");
 	struct list_data *data = get_list_data(p);
 	if (data && idx < data->items.num) {
 		list_item_free(data, data->items.array + idx);
@@ -1204,18 +1256,21 @@ void obs_property_list_item_remove(obs_property_t *p, size_t idx)
 
 size_t obs_property_list_item_count(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_item_count called");
 	struct list_data *data = get_list_data(p);
 	return data ? data->items.num : 0;
 }
 
 bool obs_property_list_item_disabled(obs_property_t *p, size_t idx)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_item_disabled called");
 	struct list_data *data = get_list_data(p);
 	return (data && idx < data->items.num) ? data->items.array[idx].disabled : false;
 }
 
 void obs_property_list_item_disable(obs_property_t *p, size_t idx, bool disabled)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_item_disable called");
 	struct list_data *data = get_list_data(p);
 	if (!data || idx >= data->items.num)
 		return;
@@ -1236,24 +1291,28 @@ const char *obs_property_list_item_string(obs_property_t *p, size_t idx)
 
 long long obs_property_list_item_int(obs_property_t *p, size_t idx)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_item_int called");
 	struct list_data *data = get_list_fmt_data(p, OBS_COMBO_FORMAT_INT);
 	return (data && idx < data->items.num) ? data->items.array[idx].ll : 0;
 }
 
 double obs_property_list_item_float(obs_property_t *p, size_t idx)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_item_float called");
 	struct list_data *data = get_list_fmt_data(p, OBS_COMBO_FORMAT_FLOAT);
 	return (data && idx < data->items.num) ? data->items.array[idx].d : 0.0;
 }
 
 bool obs_property_list_item_bool(obs_property_t *p, size_t idx)
 {
+	blog(LOG_DEBUG, "Function obs_property_list_item_bool called");
 	struct list_data *data = get_list_fmt_data(p, OBS_COMBO_FORMAT_BOOL);
 	return (data && idx < data->items.num) ? data->items.array[idx].d : false;
 }
 
 enum obs_editable_list_type obs_property_editable_list_type(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_editable_list_type called");
 	struct editable_list_data *data = get_type_data(p, OBS_PROPERTY_EDITABLE_LIST);
 	return data ? data->type : OBS_EDITABLE_LIST_TYPE_STRINGS;
 }
@@ -1275,6 +1334,7 @@ const char *obs_property_editable_list_default_path(obs_property_t *p)
 
 void obs_property_frame_rate_clear(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_frame_rate_clear called");
 	struct frame_rate_data *data = get_type_data(p, OBS_PROPERTY_FRAME_RATE);
 	if (!data)
 		return;
@@ -1285,6 +1345,7 @@ void obs_property_frame_rate_clear(obs_property_t *p)
 
 void obs_property_frame_rate_options_clear(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_frame_rate_options_clear called");
 	struct frame_rate_data *data = get_type_data(p, OBS_PROPERTY_FRAME_RATE);
 	if (!data)
 		return;
@@ -1294,6 +1355,7 @@ void obs_property_frame_rate_options_clear(obs_property_t *p)
 
 void obs_property_frame_rate_fps_ranges_clear(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_frame_rate_fps_ranges_clear called");
 	struct frame_rate_data *data = get_type_data(p, OBS_PROPERTY_FRAME_RATE);
 	if (!data)
 		return;
@@ -1303,6 +1365,7 @@ void obs_property_frame_rate_fps_ranges_clear(obs_property_t *p)
 
 size_t obs_property_frame_rate_option_add(obs_property_t *p, const char *name, const char *description)
 {
+	blog(LOG_DEBUG, "Function obs_property_frame_rate_option_add called");
 	struct frame_rate_data *data = get_type_data(p, OBS_PROPERTY_FRAME_RATE);
 	if (!data)
 		return DARRAY_INVALID;
@@ -1318,6 +1381,7 @@ size_t obs_property_frame_rate_option_add(obs_property_t *p, const char *name, c
 size_t obs_property_frame_rate_fps_range_add(obs_property_t *p, struct media_frames_per_second min,
 					     struct media_frames_per_second max)
 {
+	blog(LOG_DEBUG, "Function obs_property_frame_rate_fps_range_add called");
 	struct frame_rate_data *data = get_type_data(p, OBS_PROPERTY_FRAME_RATE);
 	if (!data)
 		return DARRAY_INVALID;
@@ -1332,6 +1396,7 @@ size_t obs_property_frame_rate_fps_range_add(obs_property_t *p, struct media_fra
 
 void obs_property_frame_rate_option_insert(obs_property_t *p, size_t idx, const char *name, const char *description)
 {
+	blog(LOG_DEBUG, "Function obs_property_frame_rate_option_insert called");
 	struct frame_rate_data *data = get_type_data(p, OBS_PROPERTY_FRAME_RATE);
 	if (!data)
 		return;
@@ -1345,6 +1410,7 @@ void obs_property_frame_rate_option_insert(obs_property_t *p, size_t idx, const 
 void obs_property_frame_rate_fps_range_insert(obs_property_t *p, size_t idx, struct media_frames_per_second min,
 					      struct media_frames_per_second max)
 {
+	blog(LOG_DEBUG, "Function obs_property_frame_rate_fps_range_insert called");
 	struct frame_rate_data *data = get_type_data(p, OBS_PROPERTY_FRAME_RATE);
 	if (!data)
 		return;
@@ -1357,6 +1423,7 @@ void obs_property_frame_rate_fps_range_insert(obs_property_t *p, size_t idx, str
 
 size_t obs_property_frame_rate_options_count(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_frame_rate_options_count called");
 	struct frame_rate_data *data = get_type_data(p, OBS_PROPERTY_FRAME_RATE);
 	return data ? data->extra_options.num : 0;
 }
@@ -1375,23 +1442,27 @@ const char *obs_property_frame_rate_option_description(obs_property_t *p, size_t
 
 size_t obs_property_frame_rate_fps_ranges_count(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_frame_rate_fps_ranges_count called");
 	struct frame_rate_data *data = get_type_data(p, OBS_PROPERTY_FRAME_RATE);
 	return data ? data->ranges.num : 0;
 }
 
 struct media_frames_per_second obs_property_frame_rate_fps_range_min(obs_property_t *p, size_t idx)
 {
+	blog(LOG_DEBUG, "Function obs_property_frame_rate_fps_range_min called");
 	struct frame_rate_data *data = get_type_data(p, OBS_PROPERTY_FRAME_RATE);
 	return data && data->ranges.num > idx ? data->ranges.array[idx].min_time : (struct media_frames_per_second){0};
 }
 struct media_frames_per_second obs_property_frame_rate_fps_range_max(obs_property_t *p, size_t idx)
 {
+	blog(LOG_DEBUG, "Function obs_property_frame_rate_fps_range_max called");
 	struct frame_rate_data *data = get_type_data(p, OBS_PROPERTY_FRAME_RATE);
 	return data && data->ranges.num > idx ? data->ranges.array[idx].max_time : (struct media_frames_per_second){0};
 }
 
 enum obs_group_type obs_property_group_type(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_group_type called");
 	struct group_data *data = get_type_data(p, OBS_PROPERTY_GROUP);
 	return data ? data->type : OBS_COMBO_INVALID;
 }
@@ -1404,6 +1475,7 @@ obs_properties_t *obs_property_group_content(obs_property_t *p)
 
 enum obs_button_type obs_property_button_type(obs_property_t *p)
 {
+	blog(LOG_DEBUG, "Function obs_property_button_type called");
 	struct button_data *data = get_type_data(p, OBS_PROPERTY_BUTTON);
 	return data ? data->type : OBS_BUTTON_DEFAULT;
 }

@@ -28,6 +28,7 @@
 #include "video-io.h"
 #include "video-frame.h"
 #include "video-scaler.h"
+#include <util/base.h>
 
 extern profiler_name_store_t *obs_get_profiler_name_store(void);
 
@@ -238,6 +239,7 @@ static inline void init_cache(struct video_output *video)
 
 int video_output_open(video_t **video, struct video_output_info *info)
 {
+	blog(LOG_DEBUG, "Function video_output_open called");
 	struct video_output *out;
 
 	if (!valid_video_params(info))
@@ -277,6 +279,7 @@ fail0:
 
 void video_output_close(video_t *video)
 {
+	blog(LOG_DEBUG, "Function video_output_close called");
 	if (!video)
 		return;
 
@@ -496,6 +499,7 @@ bool video_output_disconnect2(video_t *video, void (*callback)(void *param, stru
 
 bool video_output_active(const video_t *video)
 {
+	blog(LOG_DEBUG, "Function video_output_active called");
 	if (!video)
 		return false;
 	return os_atomic_load_bool(&get_const_root(video)->raw_active);
@@ -508,6 +512,7 @@ const struct video_output_info *video_output_get_info(const video_t *video)
 
 bool video_output_lock_frame(video_t *video, struct video_frame *frame, int count, uint64_t timestamp)
 {
+	blog(LOG_DEBUG, "Function video_output_lock_frame called");
 	struct cached_frame_info *cfi;
 	bool locked;
 
@@ -546,6 +551,7 @@ bool video_output_lock_frame(video_t *video, struct video_frame *frame, int coun
 
 void video_output_unlock_frame(video_t *video)
 {
+	blog(LOG_DEBUG, "Function video_output_unlock_frame called");
 	if (!video)
 		return;
 
@@ -561,11 +567,13 @@ void video_output_unlock_frame(video_t *video)
 
 uint64_t video_output_get_frame_time(const video_t *video)
 {
+	blog(LOG_DEBUG, "Function video_output_get_frame_time called");
 	return video ? video->frame_time : 0;
 }
 
 void video_output_stop(video_t *video)
 {
+	blog(LOG_DEBUG, "Function video_output_stop called");
 	void *thread_ret;
 
 	if (!video)
@@ -582,6 +590,7 @@ void video_output_stop(video_t *video)
 
 bool video_output_stopped(video_t *video)
 {
+	blog(LOG_DEBUG, "Function video_output_stopped called");
 	if (!video)
 		return true;
 
@@ -590,21 +599,25 @@ bool video_output_stopped(video_t *video)
 
 enum video_format video_output_get_format(const video_t *video)
 {
+	blog(LOG_DEBUG, "Function video_output_get_format called");
 	return video ? get_const_root(video)->info.format : VIDEO_FORMAT_NONE;
 }
 
 uint32_t video_output_get_width(const video_t *video)
 {
+	blog(LOG_DEBUG, "Function video_output_get_width called");
 	return video ? get_const_root(video)->info.width : 0;
 }
 
 uint32_t video_output_get_height(const video_t *video)
 {
+	blog(LOG_DEBUG, "Function video_output_get_height called");
 	return video ? get_const_root(video)->info.height : 0;
 }
 
 double video_output_get_frame_rate(const video_t *video)
 {
+	blog(LOG_DEBUG, "Function video_output_get_frame_rate called");
 	if (!video)
 		return 0.0;
 
@@ -615,11 +628,13 @@ double video_output_get_frame_rate(const video_t *video)
 
 uint32_t video_output_get_skipped_frames(const video_t *video)
 {
+	blog(LOG_DEBUG, "Function video_output_get_skipped_frames called");
 	return (uint32_t)os_atomic_load_long(&get_const_root(video)->skipped_frames);
 }
 
 uint32_t video_output_get_total_frames(const video_t *video)
 {
+	blog(LOG_DEBUG, "Function video_output_get_total_frames called");
 	return (uint32_t)os_atomic_load_long(&get_const_root(video)->total_frames);
 }
 
