@@ -1,5 +1,5 @@
 param(
-    [string]$baseDir = "e:\Rust\obs-studio",
+    [string]$baseDir = $PSScriptRoot,
     [switch]$dryRun = $false
 )
 
@@ -46,7 +46,7 @@ function Ensure-UtilBaseDefsIncluded($sourceFile) {
                 # Insert the new include after the last one
                 $content = $content.Insert($endOfLineIndex + 1, "#include <util/base.h>`n")
                 $modified = $true
-                Write-Host "Added util/base.h include to $sourceFile"
+                # Write-Host "Added util/base.h include to $sourceFile"
             }
         }
         else {
@@ -70,7 +70,7 @@ function Ensure-UtilBaseDefsIncluded($sourceFile) {
             
             $content = $content.Insert($headerEndIndex, "#include <util/base.h>`n`n")
             $modified = $true
-            Write-Host "Added util/base.h include to the top of $sourceFile"
+            # Write-Host "Added util/base.h include to the top of $sourceFile"
         }
     }
     
@@ -86,16 +86,20 @@ function Add-DebugLogs($sourceFile, $exportedFunctions) {
     $content = $result.Content
     $modified = $result.Modified
 
-    $usesDefinedBlog = $sourceFile -contains "#define blog("
-    
+    $usesDefinedBlog = $content.Contains("#define blog(")
+    if($sourceFile.Contains("\util\") -or $sourceFile.Contains("/util/")) {
+        Write-Host "Skipping $sourceFile (util directory)" -ForegroundColor Yellow
+        return $content
+    }
+
     foreach ($function in $exportedFunctions) {
         # Match the function definition in the source file
         # This looks for the function name followed by opening parenthesis and parameters
         $functionRegex = [regex]"(^|\s+)$function\s*\([^)]*\)\s*\{(?!\s*blog\s*\(\s*LOG_DEBUG)"
         $debugLogLine = "`n`tblog(LOG_DEBUG, `"Function $function called`");"
 
-        if($usesDefinedBlog) {
-        $debugLogLine = "`n`tblog(LOG_DEBUG, `"Function %s called`", `"$function`");"
+        if ($usesDefinedBlog) {
+            $debugLogLine = "`n`tblog(LOG_DEBUG, `"Function %s called`", `"$function`");"
         }
         
         $match = $functionRegex.Match($content)
@@ -105,7 +109,6 @@ function Add-DebugLogs($sourceFile, $exportedFunctions) {
             if ($braceIndex -gt 0) {
                 $content = $content.Insert($braceIndex + 1, $debugLogLine)
                 $modified = $true
-                Write-Host "Added debug log for function $function in $sourceFile"
             }
         }
     }
@@ -120,13 +123,12 @@ function Add-DebugLogs($sourceFile, $exportedFunctions) {
 
 # Function to process a pair of header and source files
 function Process-FilePair($headerFile, $sourceFile) {
-    Write-Host "Processing: $sourceFile with header $headerFile"
+    # Write-Host "Processing: $sourceFile with header $headerFile"
     
     # Get exported functions from the header file
     $exportedFunctions = Get-ExportedFunctions $headerFile
     
     if ($exportedFunctions.Count -eq 0) {
-        Write-Host "No exported functions found in $headerFile"
         return
     }
     
@@ -143,11 +145,17 @@ function Process-FilePair($headerFile, $sourceFile) {
     }
     else {
         if ($modified) {
-            Write-Host "Modified $sourceFile" -ForegroundColor Yellow
+            # Write-Host "Modified $sourceFile" -ForegroundColor Yellow
         }
         else {
-            Write-Host "No changes needed for $sourceFile" -ForegroundColor Green
+            # Write-Host "No changes needed for $sourceFile" -ForegroundColor Green
         }
+    }
+}
+
+function Reset-Directories {
+    foreach ($dir in $directories) {
+        git checkout $dir
     }
 }
 
@@ -203,6 +211,7 @@ else {
 }
 
 # Start processing
+Reset-Directories
 Process-Directories
 
 Write-Host "Processing complete!" -ForegroundColor Green
