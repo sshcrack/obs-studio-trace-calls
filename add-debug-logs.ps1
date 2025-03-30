@@ -30,29 +30,76 @@ function Get-ExportedFunctions($headerFile) {
     return $exportedFunctions
 }
 
-# Function to add debug logs to source files
-function Add-DebugLogs($sourceFile, $exportedFunctions) {
+# Function to ensure syslog_defs.h is included in the file
+function Ensure-SyslogDefsIncluded($sourceFile) {
     $content = Get-Content $sourceFile -Raw
     $modified = $false
+    
+    # Check if syslog_defs.h is already included
+    if (-not $content.Contains("#include <syslog_defs.h>") -and -not $content.Contains('#include "syslog_defs.h"')) {
+        # Find the last include statement
+        $lastIncludeIndex = $content.LastIndexOf("#include")
+        if ($lastIncludeIndex -ge 0) {
+            # Find the end of the line containing the last include
+            $endOfLineIndex = $content.IndexOf("`n", $lastIncludeIndex)
+            if ($endOfLineIndex -ge 0) {
+                # Insert the new include after the last one
+                $content = $content.Insert($endOfLineIndex + 1, "#include <syslog_defs.h>`n")
+                $modified = $true
+                Write-Host "Added syslog_defs.h include to $sourceFile"
+            }
+        }
+        else {
+            # If no includes found, add at the top after any comments or preprocessor directives
+            $headerEndIndex = 0
+            $lines = $content -split "`n"
+            for ($i = 0; $i -lt $lines.Length; $i++) {
+                $line = $lines[$i].Trim()
+                if (-not $line.StartsWith("/*") -and 
+                    -not $line.StartsWith("*") -and 
+                    -not $line.StartsWith("//") -and 
+                    -not $line.StartsWith("#pragma") -and 
+                    -not $line.StartsWith("#define") -and 
+                    -not $line.StartsWith("#ifndef") -and 
+                    -not $line.StartsWith("#endif") -and 
+                    -not [string]::IsNullOrWhiteSpace($line)) {
+                    $headerEndIndex = $content.IndexOf($lines[$i])
+                    break
+                }
+            }
+            
+            $content = $content.Insert($headerEndIndex, "#include <syslog_defs.h>`n`n")
+            $modified = $true
+            Write-Host "Added syslog_defs.h include to the top of $sourceFile"
+        }
+    }
+    
+    return @{
+        Content = $content
+        Modified = $modified
+    }
+}
+
+# Function to add debug logs to source files
+function Add-DebugLogs($sourceFile, $exportedFunctions) {
+    $result = Ensure-SyslogDefsIncluded $sourceFile
+    $content = $result.Content
+    $modified = $result.Modified
     
     foreach ($function in $exportedFunctions) {
         # Match the function definition in the source file
         # This looks for the function name followed by opening parenthesis and parameters
-        $functionRegex = [regex]"(^|\s+)$function\s*\([^)]*\)\s*(?:\{|;)"
-        $debugLogLine = "blog(LOG_DEBUG, `"Function $function called`");"
+        $functionRegex = [regex]"(^|\s+)$function\s*\([^)]*\)\s*\{(?!\s*blog\s*\(\s*LOG_DEBUG)"
+        $debugLogLine = "`n`tblog(LOG_DEBUG, `"Function $function called`");"
         
         $match = $functionRegex.Match($content)
         if ($match.Success) {
-            # Check if the debug log is already there to avoid duplicates
-            $nextLine = $content.Substring($match.Index + $match.Length, [Math]::Min(100, $content.Length - $match.Index - $match.Length))
-            if (-not $nextLine.Contains($debugLogLine)) {
-                # Find the opening brace and insert the debug log after it
-                $braceIndex = $content.IndexOf('{', $match.Index)
-                if ($braceIndex -gt 0) {
-                    $content = $content.Insert($braceIndex + 1, "`n`t$debugLogLine`n")
-                    $modified = $true
-                    Write-Host "Added debug log for function $function in $sourceFile"
-                }
+            # Find the opening brace and insert the debug log after it
+            $braceIndex = $content.IndexOf('{', $match.Index)
+            if ($braceIndex -gt 0) {
+                $content = $content.Insert($braceIndex + 1, $debugLogLine)
+                $modified = $true
+                Write-Host "Added debug log for function $function in $sourceFile"
             }
         }
     }
