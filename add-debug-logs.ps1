@@ -85,12 +85,18 @@ function Add-DebugLogs($sourceFile, $exportedFunctions) {
     $result = Ensure-UtilBaseDefsIncluded $sourceFile
     $content = $result.Content
     $modified = $result.Modified
+
+    $usesDefinedBlog = $sourceFile -contains "#define blog("
     
     foreach ($function in $exportedFunctions) {
         # Match the function definition in the source file
         # This looks for the function name followed by opening parenthesis and parameters
         $functionRegex = [regex]"(^|\s+)$function\s*\([^)]*\)\s*\{(?!\s*blog\s*\(\s*LOG_DEBUG)"
         $debugLogLine = "`n`tblog(LOG_DEBUG, `"Function $function called`");"
+
+        if($usesDefinedBlog) {
+        $debugLogLine = "`n`tblog(LOG_DEBUG, `"Function %s called`", `"$function`");"
+        }
         
         $match = $functionRegex.Match($content)
         if ($match.Success) {
