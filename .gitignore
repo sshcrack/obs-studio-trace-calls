@@ -31,7 +31,7 @@
 !COPYING
 !INSTALL
 !README.rst
-!add-debug-logs.ps1
+!add-debug-logs
 
 # Exclude lock files
 *.lock.json
