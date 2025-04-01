@@ -6,10 +6,10 @@ import { processSource } from './main/processor';
 
 const directories = [
     "libobs",
-    "libobs-d3d11",
-    "libobs-opengl",
-    "libobs-winrt",
-    "plugins"
+    //"libobs-d3d11",
+    //"libobs-opengl",
+    //"libobs-winrt",
+    //"plugins"
 ].map(e => path.join(import.meta.dir, "..", e))
 
 export async function checkoutDirectory(path: string) {
@@ -38,6 +38,9 @@ for (const dir of directories) {
     }
 }
 
+if (process.argv[2] == "--checkout-only")
+    process.exit(0)
+
 console.log(c`{green Found ${exportedFunctions.size} exported functions}`);
 if (false) {
     const source = await Bun.file(path.join(import.meta.dir, "..", "libobs", "obs-data.c")).text()
@@ -50,7 +53,7 @@ if (false) {
 
 for (const dir of directories) {
     console.log(c`{green Processing directory: ${dir}}`);
-    const sourceGlob = new Glob(path.join(dir, "**", "*.{cpp,cc,cxx}"))
+    const sourceGlob = new Glob(path.join(dir, "**", "*.{cpp,cc,cxx,c}"))
     for await (const filePath of sourceGlob.scan()) {
         const content = await Bun.file(filePath).text()
         const returnVal = await processSource(content, exportedFunctions)
@@ -58,3 +61,4 @@ for (const dir of directories) {
         await Bun.write(filePath, returnVal)
     }
 }
+console.log("Left over functions:", exportedFunctions.size);

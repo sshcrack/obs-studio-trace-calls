@@ -1,0 +1,21 @@
+
+obs_data_t *data, const char *name
+obs_data_t *data, const char *name
+obs_data_t *data, const char *name
+obs_data_t *data, const char *name
+obs_data_t *data, const char *name
+obs_data_t *data, const char *name
+
+/* Array functions 
+
+obs_data_array_t *array
+obs_data_array_t *array
+
+obs_data_array_t *array
+obs_data_array_t *array, size_t idx
+obs_data_array_t *array, obs_data_t *obj
+obs_data_array_t *array, size_t idx, obs_data_t *obj
+obs_data_array_t *array, obs_data_array_t *array2
+obs_data_array_t *array, size_t idx
+obs_data_array_t *array, void (*cb)(obs_data_t *data, void *param), void *param
+

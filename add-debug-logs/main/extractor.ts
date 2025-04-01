@@ -1,12 +1,14 @@
 import { EXPORTED_FUNCTION_REGEX, FULL_FUNCTION_REGEX } from './constants';
 
+export type CppParameter = {
+    name: string
+    type: string,
+    isPointer: boolean
+}
+
 export type CppFunction = {
     name: string
-    params: {
-        name: string
-        type: string,
-        isPointer: boolean
-    }[]
+    params: CppParameter[]
 }
 
 export async function getExportedFunctions(headerContent: string): Promise<CppFunction[]> {
@@ -68,7 +70,7 @@ function escapeRegex(str: string) {
  */
 export function getFunctionLineNumber(sourceContent: string, functionName: string): number {
     // Look for function definition pattern
-    const functionRegex = new RegExp(String.raw`(${functionName}\s*\(.*\)\s*\{)`, '');
+    const functionRegex = new RegExp(String.raw`(${escapeRegex(functionName)}\s*\(.*\)\s*\{)`, '');
     const match = functionRegex.exec(sourceContent);
 
     if (!match) {
@@ -94,7 +96,7 @@ export function getFormatFromType(type: string): string | null {
         "bool": "%s",
     }
 
-    const anyMatch = parts.find(e => map[e as keyof typeof map])
+    const anyMatch = Object.keys(map).find(e => parts.some(x => x.includes(e)))
     if (anyMatch) {
         return map[anyMatch as keyof typeof map]
     }
