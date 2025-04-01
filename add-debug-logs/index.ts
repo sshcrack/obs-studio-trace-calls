@@ -1,8 +1,8 @@
 import { $, Glob } from "bun";
 import path from "path"
 import c from "chalk-template"
-import { processGlob } from './main/processor';
-import { getExportedFunctions } from './main/extractor';
+import { getExportedFunctions, type CppFunction } from './main/extractor';
+import { processSource } from './main/processor';
 
 const directories = [
     "libobs",
@@ -17,18 +17,44 @@ export async function checkoutDirectory(path: string) {
     await $`git checkout ${path}`
 }
 
-const obsMainFile = path.join(import.meta.dir, "..", "libobs", "obs.h")
-const mainExports = await getExportedFunctions(await Bun.file(obsMainFile).text());
-
+const exportedFunctions = new Map<string, CppFunction>()
 for (const dir of directories) {
     console.log(`Checking out directory: ${dir}`);
     await checkoutDirectory(dir)
 
-    if(process.argv[2] == "--checkout")
+    if (process.argv[2] == "--checkout-only")
         continue
 
-    const glob = new Glob(path.join(dir, "**", "*.{cpp,c}"))
+    const headerGlob = new Glob(path.join(dir, "**", "*.{h,hpp}"))
     console.log(c`{green Processing directory: ${dir}}`);
-    await processGlob(glob, mainExports)
+
+    for await (const filePath of headerGlob.scan()) {
+        if (filePath.includes("frontend") || filePath.includes("\\util\\") || filePath.includes("/util/"))
+            continue;
+
+        const content = await Bun.file(filePath).text()
+        const functions = await getExportedFunctions(content)
+        functions.forEach(e => exportedFunctions.set(e.name, e))
+    }
 }
 
+console.log(c`{green Found ${exportedFunctions.size} exported functions}`);
+if (false) {
+    const source = await Bun.file(path.join(import.meta.dir, "..", "libobs", "obs-data.c")).text()
+    const returnVal = await processSource(source, exportedFunctions)
+    await Bun.write("out.c", returnVal)
+
+    console.log("Left over functions:", exportedFunctions.size);
+    process.exit(0)
+}
+
+for (const dir of directories) {
+    console.log(c`{green Processing directory: ${dir}}`);
+    const sourceGlob = new Glob(path.join(dir, "**", "*.{cpp,cc,cxx}"))
+    for await (const filePath of sourceGlob.scan()) {
+        const content = await Bun.file(filePath).text()
+        const returnVal = await processSource(content, exportedFunctions)
+
+        await Bun.write(filePath, returnVal)
+    }
+}

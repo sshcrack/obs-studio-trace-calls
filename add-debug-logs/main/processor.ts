@@ -1,65 +1,65 @@
-import type { BunFile, Glob } from 'bun'
-import path from "path"
-import { getExportedFunctions, getFunctionLineNumber, type CppFunction } from './extractor'
-import { EXCLUDE_DIRECTORIES, LOG_LEVEL, LOGGING_FUNCTION } from './constants'
+import { LOG_LEVEL, LOGGING_FUNCTION } from './constants'
+import { getFormatFromType, type CppFunction } from './extractor'
 
-export async function processFile(sourceFile: BunFile, headerFile: BunFile, additionalExports: CppFunction[] = []) {
-    const headerContent = await headerFile.text()
-    const sourceContent = await sourceFile.text()
-
-    const exportedFunctions = await getExportedFunctions(headerContent)
-    if (exportedFunctions.length === 0) {
-        return
-    }
-
+export async function processSource(sourceContent: string, functions: Map<string, CppFunction>) {
     const sourceLines = sourceContent.split("\n")
-    for (const func of [...exportedFunctions, ...additionalExports]) {
-        const lineNumber = getFunctionLineNumber(sourceLines.join("\n"), func.name)
-        if (lineNumber === -1) {
-            //if (!sourceFile.name?.includes("obs.c") && !additionalExports.includes(func))
-//                console.log("Function not found in source file", sourceFile.name, ":", func.name)
+    const functionsFound = new Set<CppFunction>()
 
+    let bracesCount = 0
+    const funcArray = Array.from(functions.values())
+
+    for (let i = 0; i < sourceLines.length; i++) {
+        const line = sourceLines[i].trim()
+        const prevCount = bracesCount
+        bracesCount += line.split("{").length - 1
+        bracesCount -= line.split("}").length - 1
+
+        const hasNewFunc = prevCount === 0 && bracesCount === 1
+        if (!hasNewFunc)
             continue
+
+        let funcBegin = i;
+        // Finding beginning of function
+        while (funcBegin > 0 && !sourceLines[funcBegin].includes("(") && !sourceLines[funcBegin].includes("struct ")) {
+            funcBegin--;
         }
 
+        const thatLine = sourceLines[funcBegin].trim()
 
-
-        let insertPos = lineNumber + 1
-        if(!sourceLines[lineNumber].includes("{") && sourceLines[insertPos].includes("{"))
-            insertPos = lineNumber + 2
-
-
-        sourceLines.splice(insertPos, 0, `${LOGGING_FUNCTION}(${LOG_LEVEL}, "${func.name} called");`)
-    }
-
-    await Bun.write(sourceFile, sourceLines.join("\n"))
-}
-
-// Finds the corresponding header and source files for a given file path
-export async function findCorrespondingFiles(filePath: string, additionalExports: CppFunction[] = []) {
-    const withoutExt = path.basename(filePath, path.extname(filePath))
-    const parentDir = path.dirname(filePath);
-
-    let headerFile = Bun.file(path.join(parentDir, withoutExt + ".h"))
-    if (!await headerFile.exists()) {
-        headerFile = Bun.file(path.join(parentDir, withoutExt + ".hpp"))
-    }
-
-    if (!await headerFile.exists()) {
-        return
-    }
-
-    let sourceFile = Bun.file(filePath)
-    processFile(sourceFile, headerFile, additionalExports)
-}
-
-export async function processGlob(glob: Glob, additionalExports: CppFunction[] = []) {
-    for await (const filePath of glob.scan({
-        onlyFiles: true
-    })) {
-        if (EXCLUDE_DIRECTORIES.some(dir => filePath.includes(dir)))
+        const func = funcArray.find(f => thatLine.includes(f.name))
+        if (!func)
             continue
 
-        findCorrespondingFiles(filePath, additionalExports)
+        functionsFound.add(func)
+
+        const params = func.params.map(p => {
+            const format = getFormatFromType(p.type)
+            if (format)
+                return {
+                    formatter: format,
+                    name: p.name
+                }
+
+            if (p.isPointer)
+                return {
+                    formatter: "%p",
+                    name: p.name,
+                }
+
+            return p.name
+        })
+
+        // With stuff like %s, %d
+        let formatString = params.map(e => typeof e === "object" ? `${e.name}: ${e.formatter}` : `${e}: no formatter for this`).join(", ")
+        // With actual variable names
+        let argumentStr = params.map(e => typeof e === "object" && `${e.name}`).filter(e => e !== null).join(", ")
+
+        sourceLines[i] = sourceLines[i] + `${LOGGING_FUNCTION}(${LOG_LEVEL}, "${func.name} called with params: ${formatString}", ${argumentStr});`
     }
+
+    for (const func of functionsFound) {
+        functions.delete(func.name)
+    }
+
+    return sourceLines.join("\n")
 }

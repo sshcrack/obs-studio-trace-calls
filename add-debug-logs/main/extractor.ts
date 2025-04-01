@@ -68,7 +68,7 @@ function escapeRegex(str: string) {
  */
 export function getFunctionLineNumber(sourceContent: string, functionName: string): number {
     // Look for function definition pattern
-    const functionRegex = new RegExp(`(^|\\s+)${functionName}\\s*\\([^{]*?\\)\\s*\\{(?!\\s*blog\\s*\\(\\s*LOG_DEBUG)`, 'gm');
+    const functionRegex = new RegExp(String.raw`(${functionName}\s*\(.*\)\s*\{)`, '');
     const match = functionRegex.exec(sourceContent);
 
     if (!match) {
@@ -81,4 +81,23 @@ export function getFunctionLineNumber(sourceContent: string, functionName: strin
 
     // Line numbers are 1-based
     return lineBreaks ? lineBreaks.length + 1 : 1;
+}
+
+export function getFormatFromType(type: string): string | null {
+    const parts = type.split(" ")
+
+    const map = {
+        "char": "%s",
+        "int": "%d",
+        "float": "%f",
+        "double": "%lf",
+        "bool": "%s",
+    }
+
+    const anyMatch = parts.find(e => map[e as keyof typeof map])
+    if (anyMatch) {
+        return map[anyMatch as keyof typeof map]
+    }
+
+    return null
 }
