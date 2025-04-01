@@ -1,20 +1,18 @@
 import { LOG_INCLUDE, LOG_LEVEL, LOGGING_FUNCTION } from './constants'
 import { getFormatFromType, type CppFunction, type CppParameter } from './extractor'
-export function reparseParameters(parameters: CppParameter[], lines: string[]) {
+export function reparseParameters(lines: string[]) {
     // Join lines and clean up whitespace
     const fullStr = lines.join(" ").split("\r").join("").replace(/\s+/g, " ");
     const beginParams = fullStr.indexOf("(");
     const endParams = fullStr.lastIndexOf(")");
 
     if (beginParams === -1 || endParams === -1) {
-        return parameters;
+        return [];
     }
 
     const paramsStr = fullStr.substring(beginParams + 1, endParams).trim();
 
-    // Clear list of parameters
-    parameters.splice(0, parameters.length);
-
+    const parameters: CppParameter[] = []
     // Split by commas that aren't inside brackets/parentheses
     let parenLevel = 0;
     let bracketLevel = 0;
@@ -133,12 +131,12 @@ function parseParameter(paramStr: string, parameters: CppParameter[]) {
     }
 }
 
-export async function processSource(sourceContent: string, functions: Map<string, CppFunction>) {
+export async function processSource(sourceContent: string, rawFunctions: Set<string>) {
     const sourceLines = sourceContent.split("\n")
-    const functionsFound = new Set<CppFunction>()
+    const functionsFound = new Set<string>()
 
     let bracesCount = 0
-    const funcArray = Array.from(functions.values())
+    const funcArray = Array.from(rawFunctions.values())
 
     for (let i = 0; i < sourceLines.length; i++) {
         const line = sourceLines[i].trim()
@@ -158,15 +156,11 @@ export async function processSource(sourceContent: string, functions: Map<string
 
         const thatLine = sourceLines[funcBegin].trim()
 
-        const func = funcArray.find(f => thatLine.includes(f.name))
-        if (!func)
+        const fnName = funcArray.find(fName => thatLine.includes(fName))
+        if (!fnName)
             continue
 
-        reparseParameters(func.params, sourceLines.slice(funcBegin, i + 1))
-
-        functionsFound.add(func)
-
-        const params = func.params.map(p => {
+        const params = reparseParameters(sourceLines.slice(funcBegin, i + 1)).map(p => {
             const format = getFormatFromType(p.type)
             if (format)
                 return {
@@ -183,16 +177,18 @@ export async function processSource(sourceContent: string, functions: Map<string
             return p.name
         })
 
+        functionsFound.add(fnName)
+
         // With stuff like %s, %d
         let formatString = params.map(e => typeof e === "object" ? `${e.name}: ${e.formatter}` : `${e}: no formatter for this`).join(", ")
         // With actual variable names
         let argumentStr = params.map(e => typeof e === "object" && `${e.name}`).filter(e => e !== null).join(", ")
 
-        sourceLines[i] = sourceLines[i] + `${LOGGING_FUNCTION}(${LOG_LEVEL}, "${func.name} called with params: ${formatString}"${params.length !== 0 ? "," + argumentStr : ""});`
+        sourceLines[i] = sourceLines[i] + `${LOGGING_FUNCTION}(${LOG_LEVEL}, "${fnName} called with params: ${formatString}"${params.length !== 0 ? "," + argumentStr : ""});`
     }
 
-    for (const func of functionsFound) {
-        functions.delete(func.name)
+    for (const fnName of functionsFound) {
+        rawFunctions.delete(fnName)
     }
 
     let afterIncludes = 0

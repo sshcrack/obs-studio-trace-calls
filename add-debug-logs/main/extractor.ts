@@ -11,47 +11,19 @@ export type CppFunction = {
     params: CppParameter[]
 }
 
-export async function getExportedFunctions(headerContent: string): Promise<CppFunction[]> {
-    const exportedFunctions: CppFunction[] = [];
+export async function getExportedFunctions(headerContent: string): Promise<string[]> {
+    const exportedFunctions = [];
     let match: RegExpExecArray | null;
 
     while ((match = EXPORTED_FUNCTION_REGEX.exec(headerContent)) !== null) {
-        const functionName = match[1];
+        const functionName = match[3].replaceAll("*", "").trim();
 
         // Find the full function declaration by searching for the function name
         const functionRegex = FULL_FUNCTION_REGEX(functionName);
         const functionMatch = functionRegex.exec(headerContent);
 
         if (functionMatch) {
-            const paramsString = functionMatch[1];
-
-            const params = paramsString.split(',')
-                .filter(param => param.trim() !== '')
-                .map(param => {
-                    const paramTrimmed = param.trim();
-                    // Check if parameter is a pointer
-                    const isPointer = paramTrimmed.includes('*');
-
-                    // Split by spaces or tabs
-                    const parts = paramTrimmed.split(/\s+/);
-
-                    // Last part could be the parameter name, possibly with * for pointers
-                    let name = parts[parts.length - 1].replace(/[*]/g, '');
-                    // Everything else is the type
-                    let type = parts.slice(0, parts.length - 1).join(' ');
-
-                    // Handle case where pointer is attached to type instead of name
-                    if (type.includes('*')) {
-                        type = type.replace(/[*]/g, '').trim();
-                    }
-
-                    return { name, type, isPointer };
-                });
-
-            exportedFunctions.push({
-                name: functionName,
-                params
-            });
+            exportedFunctions.push(functionName);
         }
     }
 
@@ -93,7 +65,9 @@ export function getFormatFromType(type: string): string | null {
         "int": "%d",
         "float": "%f",
         "double": "%lf",
-        "bool": "%s",
+        "bool": "%d",
+        "long long": "%lld",
+        "long": "%ld",
     }
 
     const anyMatch = Object.keys(map).find(e => parts.some(x => x.includes(e)))
